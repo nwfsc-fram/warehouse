@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>EFHRC Catalog: Map Services</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+
+<body>
+<img src="images/title.png" alt="Title" />
+<div id="header">
+<ul>
+	<li><a href="Overview2.html">Overview</a></li>
+	<li id="pl"><a href="PlatesCD.html">Substrate Maps</a></li>
+	<li id="pl"><a href="PlatesEF.html">Biogenic Maps</a></li>
+	<li id="pl"><a href="PlatesK.html">Effort Maps</a></li>
+	<li id="pl"><a href="Regulatory.html">MPA Maps</a></li>
+	<li id="dl"><a href="Habitat.html">Substrate Data</a></li>
+	<li id="dl"><a href="Bathy.html">Imagery Data</a></li>
+	<li id="dl"><a href="Biogenic.html">Biogenic Data</a></li>
+	<li id="dl"><a href="Effort.html">Effort Data</a></li>
+	<li id="dl"><a href="Synthesis.html">Synthesis Data</a></li>
+	<li id="selected"><a href="mapservice.html">Map Services</a></li>
+	<li id="md"><a href="metadata.html?catalog_row_number=456&d_type=2">Metadata</a></li>
+</ul>
+</div>
+<div id="content">
+<p></p>
+<p><h3><u>EFH Map Service Help</u></h3></P>
+
+<p>This page presents a collection of web map services organized about the themes presented in Appendix C,D, and E fo the Phase 1 Report and the subsequent Synthesis Report.  Where other pages
+ have presented zipfile downloads, the services provided here are live and meant for use with vairous web mapping software applications.  Your choice of service depends
+ upon which web mapping software you have available or you prefer.  Briefly, free online options include:
+ <ul>
+  <li><a href="http://www.esri.com/software/arcgis/explorer" target="_blank">ArcGIS Explorer</a></li>
+  <li><a href="http://www.google.com/earth/index.html" target="_blank">Google Earth</a></li>
+  <li><a href="http://efh-viewer.coas.oregonstate.edu/efh/" target="_blank">PaCOOS Map Viewer</a></li>
+ </ul> 
+ </P>
+
+<P><b>Map Service Theme:</b> Thematic map groupings correlating to map graphics presented in either the <a href="http://www.pcouncil.org/wp-content/uploads/H6b_EFHRC_RPT_1_SEP2012BB.pdf" target="_blank"><b>Pacific Coast Groundfish 5-Year Review of Essential Fish Habitat Report to the Pacific Fishery Management CouncilPhase 1: New Information</b></a> or the <a href="http://www.pcouncil.org/wp-content/uploads/D6b_NMFS_SYNTH_ELECTRIC_ONLY_APR2013BB.pdf">Agenda Item D.6.b: Groundfish Essential Fish Habitat Synthesis Report</a>.</P>
+
+<P><b>ArcMap Layer File:</b>  An ArcMap .lyr file is directly readable by ArcGIS Software.  Pressing this button downloads a .lyr file to your computer.  The file does not contain actual data, but rather links to the data provided via our map server and includes display and rendering specific properties.</P>
+
+<P><b>Google Earth KMZ:</b> KML (Keyhole Markup Language) is an XML-based language for managing the display of three-dimensional geospatial data in Google Earth, Google Maps,Google Mobile, ArcGIS Explorer, and WorldWind. (The word Keyhole is an earlier name for the software that became Google Earth; the software was produced by Keyhole, Inc, which was acquired by Google in 2004. The term "Keyhole" actually honors the KH reconnaissance satellites, the original eye-in-the-sky military reconnaissance system now some 30 years old.) KML files are often distributed as KMZ files, which are zipped KML files with a .kmz extension. The files available have been tested in Google Earth version 4 and may not work in previous versions.
+
+<P><b>PaCOOS Map Viewer:</b>This button takes the user to a custom Web mapping application designed specifically for the PaCOOS West Coast Habitat Portal at OSU.  This viewer loads to your web browser and requires Microsoft Silverlight.  Please test your browser to be sure that Silverlight is installed.  The official MS Silverlight test page is located at: <a href='http://www.microsoft.com/getsilverlight/Get-Started/Install/Default.aspx'>http://www.microsoft.com/getsilverlight/Get-Started/Install/Default.aspx</a>.  Please also refresh your browser cache periodically to ensure that your get a current application configuration when you load the Map App.  To clear your IE cache use the Developer Tools (F12, then Ctrl+R), for Mozilla Firefox use F5.</P>
+
+<!--<P>What does View ESRI REST Service mean?</P>
+<P>Representational State Transfer (REST) is a style of software architecture for distributed hypermedia. REST information is used primarily by GIS developers.</P>-->
+
+<!--<P>What does View WMS mean?</P>
+<P>The Open Geospatial Consortium Web Map Service (WMS) protocol defines a simple interface for Web-based mapping applications. The WMS protocol is based on simple query syntax for posting a request for the desired layers and region to the server, which returns a map as a standard image (GIF, PNG or other format). The capabilities of  the WMS are described in an XML (Extensible Markup Language) document.</P>-->
+
+<!--<P>What does Get Data mean?</P>
+<P>This button allows the user to download data. The format of the data varies.</P>
+
+<P>What does View Metadata mean?</P>
+<P>Metadata is simply data about data.  A metadata record usually contains a number of elements that describe aspects of a resource. This button provides access to the dataset's FGDC or ISO standard metadata.</P>-->
+<table>
+<td>Launch the PaCOOS Viewer to view any of the map services below:&nbsp;&nbsp;&nbsp;</td><td><a href="http://efh-viewer.coas.oregonstate.edu/efh/" target="_blank"><img src="images/map
+_app.png" alt="PaCoos"/></a></td>
+</table>
+<table border="0", cellpadding="10">
+<th>Map Service Theme</th><th>ArcMap Layer File</th><th>Google Earth KMZ</th>
+<tr>
+  <td>Habitat Maps Pre 2005</td><!--TODO: rehost hornet.coas.oregonstate.edu/arcgis/rest/services -->
+  <td align="center"><a href="arcgis/rest/services/T1_Habitat_Pre2005/MapServer?f=lyr&v=9.3"><img src="images/ddata1.png" alt="ArcMap Layer File"/></a></td>
+  <td align="center"><a href="arcgis/rest/services/T1_Habitat_Pre2005/MapServer/kml/mapImage.kmz"><img src="images/kmla1.png" alt="Google KMZ"/></a></td>
+  </tr>
+<tr>
+  <td>Habitat Maps 2005 - 2011</td><!--TODO: rehost hornet.coas.oregonstate.edu:6080/arcgis/rest/services -->
+  <td align="center"><a href="arcgis-tcp6080/rest/services/T1_EFH_Habitat_2011_ALL/MapServer?f=lyr&v=9.3"><img src="images/ddata1.png" alt="ArcMap Layer File"/></a></td>
+  <td align="center"><a href="arcgis-tcp6080/rest/services/T1_EFH_Habitat_2011_ALL/MapServer/kml/mapImage.kmz"><img src="images/kmla1.png" alt="Google KMZ"/></a></td>
+</tr>
+<tr>
+  <td>Regional Bathymetry</td>
+  <td align="center"><a href="arcgis/rest/services/T1_Regional_Bathy/MapServer?f=lyr&v=9.3"><img src="images/ddata1.png" alt="ArcMap Layer File"/></a></td>
+  <td align="center"><a href="arcgis/rest/services/T1_Regional_Bathy/MapServer/kml/mapImage.kmz"><img src="images/kmla1.png" alt="Google KMZ"/></a></td>
+</tr>
+<tr>
+  <td>Fishing Effort</td>
+  <td align="center"><a href="arcgis/rest/services/Task2_Fishing_Effort/MapServer?f=lyr&v=9.3"><img src="images/ddata1.png" alt="ArcMap Layer File"/></a></td>
+  <td align="center"><a href="arcgis/rest/services/Task2_Fishing_Effort/MapServer/kml/mapImage.kmz"><img src="images/kmla1.png" alt="Google KMZ"/></a></td>
+</tr>
+<tr>
+  <td>Biogenic Habitat</td>
+  <td align="center"><a href="arcgis/rest/services/Task3_Biogenic_Habitat/MapServer?f=lyr&v=9.3"><img src="images/ddata1.png" alt="ArcMap Layer File"/></a></td>
+  <td align="center"><a href="arcgis/rest/services/Task3_Biogenic_Habitat/MapServer/kml/mapImage.kmz"><img src="images/kmla1.png" alt="Google KMZ"/></a></td>
+</tr>
+<tr>
+  <td>Synthesis Report Base Layers <FONT COLOR="#FF0000"></FONT></td>
+  <td align="center"><a href="arcgis/rest/services/EFH_Synthesis_BaseLayers/MapServer?f=lyr&v=9.3"><img src="images/ddata1.png" alt="ArcMap Layer File"/></a></td>
+  <td align="center"><a href="arcgis/rest/services/EFH_Synthesis_BaseLayers/MapServer/kml/mapImage.kmz"><img src="images/kmla1.png" alt="Google KMZ"/></a></td>
+</tr>
+<tr>
+  <td>Synthesis Report Physical Habitat <FONT COLOR="#FF0000"></FONT></td>
+  <td align="center"><a href="arcgis/rest/services/EFH_Synthesis_SubstrateLayers/MapServer?f=lyr&v=9.3"><img src="images/ddata1.png" alt="ArcMap Layer File"/></a></td>
+  <td align="center"><a href="arcgis/rest/services/EFH_Synthesis_SubstrateLayers/MapServer/kml/mapImage.kmz"><img src="images/kmla1.png" alt="Google KMZ"/></a></td>
+</tr>
+<tr>
+  <td>Synthesis Report Biogenic Habitat <FONT COLOR="#FF0000"></FONT></td>
+  <td align="center"><a href="arcgis/rest/services/EFH_Synthesis_BiogenicHabitat/MapServer?f=lyr&v=9.3"><img src="images/ddata1.png" alt="ArcMap Layer File"/></a></td>
+  <td align="center"><a href="arcgis/rest/services/EFH_Synthesis_BiogenicHabitat/MapServer/kml/mapImage.kmz"><img src="images/kmla1.png" alt="Google KMZ"/></a></td>
+</tr>
+<tr>
+  <td>Synthesis Report Modeled Species <FONT COLOR="#FF0000"></FONT></td>
+  <td align="center"><a href="arcgis/rest/services/EFH_Synthesis_SpeciesHabitat/MapServer?f=lyr&v=9.3"><img src="images/ddata1.png" alt="ArcMap Layer File"/></a></td>
+  <td align="center"><a href="arcgis/rest/services/EFH_Synthesis_SpeciesHabitat/MapServer/kml/mapImage.kmz"><img src="images/kmla1.png" alt="Google KMZ"/></a></td>
+</tr>
+<tr>
+  <td>Synthesis Report Fishing Impacts <FONT COLOR="#FF0000"></FONT></td>
+  <td align="center"><a href="arcgis/rest/services/EFH_Synthesis_FishingPressures/MapServer?f=lyr&v=9.3"><img src="images/ddata1.png" alt="ArcMap Layer File"/></a></td>
+  <td align="center"><a href="arcgis/rest/services/EFH_Synthesis_FishingPressures/MapServer/kml/mapImage.kmz"><img src="images/kmla1.png" alt="Google KMZ"/></a></td>
+</tr>
+<tr>
+  <td>Synthesis Report Non-Fishing Impacts <FONT COLOR="#FF0000"></FONT></td>
+  <td align="center"><a href="arcgis/rest/services/EFH_Synthesis_NonFishingPressures/MapServer?f=lyr&v=9.3"><img src="images/ddata1.png" alt="ArcMap Layer File"/></a></td>
+  <td align="center"><a href="arcgis/rest/services/EFH_Synthesis_NonFishingPressures/MapServer/kml/mapImage.kmz"><img src="images/kmla1.png" alt="Google KMZ"/></a></td>
+</tr>
+<tr>
+  <td>Pink Shrimp Trawl VMS <FONT COLOR="#FF0000">(new 2015!)</FONT></td>
+  <td align="center"><a href="arcgis/rest/services/VMS/MapServer?f=lyr&v=9.3"><img src="images/ddata1.png" alt="ArcMap Layer File"/></a></td>
+  <!--<td align="center"><a href="arcgis/rest/services/EFH_Synthesis_FishingPressures/MapServer/kml/mapImage.kmz"><img src="images/kmla1.png" alt="Google KMZ"/></a></td>-->
+</tr>
+<tr>
+  <td>RCA Closed Areas <FONT COLOR="#FF0000">(new 2015!)</FONT></td>
+  <td align="center"><a href="arcgis/rest/services/RCA/MapServer?f=lyr&v=9.3"><img src="images/ddata1.png" alt="ArcMap Layer File"/></a></td>
+  <td align="center"><a href="arcgis/rest/services/RCA/MapServer/kml/mapImage.kmz"><img src="images/kmla1.png" alt="Google KMZ"/></a></td>
+</tr>
+</table>
+</div>
+</body>
+</html>
+

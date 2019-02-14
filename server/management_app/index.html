@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--[if lt IE 7]>      <html lang="en" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Manage - NWFSC/FRAM Data Warehouse</title>
+    <base href="/management/">
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  </head>
+  <body>
+    <h2>Data Warehouse Management</h2>
+    <div>
+      <p>
+        <h3>Login:</h3>
+        <form action="../api/v1/login" method="post">
+        User name: <input type="text" name="username"/>@noaa.gov<br/>
+        Password: <input type="password" name="password"/> <input type="submit" value="Submit ../api/v1/login" formtarget="output"/>
+        </form>
+      </p>
+      
+      <p>
+        <h3>Logout:</h3>
+        <a href="../api/v1/logout" target="output">../api/v1/logout</a>
+      </p>
+      
+      <p>
+        <h3>Check User:</h3>
+        <a href="../api/v1/user" target="output">../api/v1/user</a>
+      </p>
+      
+      <p>
+        <h3>Manage Warehouse:</h3>
+        <table id="management-links" width="400pt">
+          <tr>
+            <td><a href="table.html">tables</a></td>
+            <td><a href="table-query.html">default columns</a></td>
+          </tr>
+        </table>
+      </p>
+      
+      <p>
+        <h3>API Output:</h3>
+        <iframe	name="output" src="../api/v1/user" width="100%"/>
+      </p>
+    </div>
+  </body>
+</html>

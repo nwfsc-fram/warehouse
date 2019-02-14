@@ -1,0 +1,26 @@
+<!-- Work-in-progress DTD for an InPort XML format Insert
+
+See: https://www.st.nmfs.noaa.gov/jira/browse/IPH-1111
+
+Copyright (C) 2016, ERT Inc.
+-->
+<!ELEMENT inport-metadata (item-identification,entity-information?,data-attributes?)>
+<!ATTLIST inport-metadata version CDATA #REQUIRED>
+<!ELEMENT item-identification (parent-catalog-item-id,catalog-item-type,title)>
+<!ELEMENT parent-catalog-item-id (#PCDATA)>
+<!ELEMENT catalog-item-type (#PCDATA)>
+<!ELEMENT title (#PCDATA)>
+<!ELEMENT entity-information (entity-type?,description?)>
+<!ELEMENT entity-type (#PCDATA)>
+<!ELEMENT description (#PCDATA)>
+<!ELEMENT data-attributes (data-attribute*)>
+<!ATTLIST data-attributes mode (replace|add) #IMPLIED>
+<!ELEMENT data-attribute (name,data-storage-type,max-length,precision?,status,description?,units?,allowed-values?)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT data-storage-type (#PCDATA)>
+<!ELEMENT max-length (#PCDATA)>
+<!ELEMENT precision (#PCDATA)>
+<!ELEMENT status (#PCDATA)>
+<!ELEMENT description (#PCDATA)>
+<!ELEMENT units (#PCDATA)>
+<!ELEMENT allowed-values (#PCDATA)>

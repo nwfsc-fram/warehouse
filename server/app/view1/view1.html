@@ -1,0 +1,311 @@
+
+
+<style>
+
+
+#cesiumContainer {
+ overflow: hidden; }
+
+.ui-layout-pane-west  { 
+		width:	300px;
+	} 
+
+		.ui-layout-resizer-west { width:500px; }
+
+
+
+
+svg {
+  font: 10px sans-serif;
+}
+
+.area {
+  fill: steelblue;
+  clip-path: url(#clip);
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.brush .extent {
+  stroke: #fff;
+  fill-opacity: .125;
+  shape-rendering: crispEdges;
+}
+
+
+iframe.width-changed {
+    width: 100%;
+    display: block;
+    border: 0;
+    height: 0;
+    margin: 0;
+}
+
+.fullSize {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: none;
+    width: 100%;
+    height: 100%;
+}
+
+#lat-long {
+  color: #eee;
+    font-family: sans-serif;
+    font-size: 9pt;
+    top: 90%;
+	left: 70%;
+    position: absolute;
+}
+
+#logo {
+  color: #eee;
+    font-family: sans-serif;
+    font-size: 9pt;
+    position: absolute;
+}
+#citation {
+position:absolute;top:6px;right:260px;width:32px;height:32px;
+}
+#api {
+position:absolute;top:6px;right:225px;width:32px;height:32px;
+}
+
+#contactUs {
+position:absolute;top:6px;right:190px;width:32px;height:32px;
+}
+
+
+#about {
+position:absolute;top:6px;right:155px;width:32px;height:32px;
+}
+
+#baseLayerPickerContainer {
+position:absolute;top:4px;right:118px;width:38px;height:38px;
+  color: #eee;
+    font-family: sans-serif;
+    font-size: 9pt;
+
+}
+
+#title {
+  color: #eee;
+    font-family: sans-serif;
+    font-size: 30pt;
+    position: absolute;
+	left: 85px;
+}
+
+#data_warehouse {
+  color: #eee;
+    font-family: sans-serif;
+    font-size: 20pt;
+    position: absolute;
+	left: 85px;
+	top: 45px;
+}
+
+
+.chipsdemoCustomInputs md-content.autocomplete {
+  min-height: 2000px; }
+
+.btn1 {
+  padding: 0 6px 0 6px;
+  margin: 0px 0px 0px 0px;
+  min-width: 54px;
+  border-radius: 3px;
+  font-size: 11px;
+  text-align: center;
+  text-decoration:none;
+  border: none;
+  outline: none;
+   text-transform: none;
+
+
+}
+
+.btn1[disabled] {
+  background-color: #e6e6ff;
+
+}
+
+  .controller .autocomplete input {
+    min-width: 305px; }
+
+
+.metadataEven {
+font-size: 12px;
+background-color: #E2E4FF; 
+}
+.metadataOdd {
+font-size: 12px;
+background-color: #FFFFFF; 
+}
+.metadataHeader {
+font-size: 15px;
+}
+
+
+
+
+</style>
+
+
+
+
+<div ng-controller="View1Ctrl as ctrl"  class="controller"> 
+
+      <div id="paneCenter" class="ui-layout-center">
+
+			 <div flex id="cesiumContainer" class="fullSize"/>
+			 <div id="baseLayerPickerContainer" ></div>
+			<div id="lat-long"/>
+
+			<div class="citation"><IMG SRC="images/chat1.png" id="citation" WIDTH="32" HEIGHT="32" BORDER=0 ALT="Citation and Proper Usage" title="Citation and Proper Usage"  /></div>
+			<div class="api"><IMG SRC="images/API1.png" id="api" WIDTH="32" HEIGHT="32" BORDER=0 ALT="Application Programming Interface (API)" title="Application Programming Interface (API)" /></div>
+			<div class="contactUs"><IMG SRC="images/email1.png" id="contactUs" WIDTH="32" HEIGHT="32" BORDER=0 ALT="Contact Us"  title="Contact Us" /></div>
+			<div class="about"><IMG SRC="images/i1.png" id="about" WIDTH="32" HEIGHT="32" BORDER=0 ALT="About FRAM Data Warehouse" title="About FRAM Data Warehouse"  /></div>
+
+						
+
+
+			<div id="logo">
+				<a href="http://www.nwfsc.noaa.gov" target="_blank"><IMG SRC="images/NOAA_logo.png" WIDTH="70" HEIGHT="70" BORDER=0 ALT="NOAA Logo"></a>
+			
+			</div>
+			<div id="title" >FRAM</div>
+			<div id="data_warehouse">Data Warehouse</div>
+	
+
+		</div> <!-- END Layout Center -->
+
+	
+		<div id="paneEast" class="ui-layout-east">
+		    <md-toolbar class="md-theme-indigo">
+        <h1 class="md-toolbar-tools">Graph</h1>
+      </md-toolbar>
+		
+		</div>
+		<div id="paneWest" class="ui-layout-west">
+				
+
+
+			  <md-content  class="autocomplete"  layout="column">
+
+				 <md-toolbar id="searchFilter" class="md-toolbar-tools">
+					<div class="md-medium-tall">
+					  <span>Search Filters</span>
+
+					</div>
+				  </md-toolbar>
+
+
+
+					<md-chips ng-model="ctrl.selectedSpecies"  md-autocomplete-snap="" md-require-match="true" >
+					  <md-autocomplete flex 
+						md-selected-item="ctrl.selectedItem" 
+						md-search-text="ctrl.searchText" 
+						md-items="item in ctrl.querySearch(ctrl.searchText)" 
+						md-item-text="item.species"   
+						placeholder="Search for species" 
+						md-min-length=3  md-autoselect ng-disabled="disableSpeciesFilter">
+						<span md-highlight-text="ctrl.searchText">{{item.common_name}} ({{item.scientific_name}})</span>
+					  </md-autocomplete>
+					  <md-chip-template>
+						<span class="item-title">
+						  <strong>{{$chip.common_name}}</strong>
+						  <em>({{$chip.scientific_name}})</em>
+						</span>
+					  </md-chip-template>
+					</md-chips>
+
+		 <md-toolbar  class="md-toolbar-tools">
+							<div  class="md-medium-tall">Time Filter<br><font style="font-size:x-small;">Click + Drag to Select Time Filter</a></font>
+							</div>
+						  </md-toolbar>
+						
+							<timeplayer  />	
+
+
+
+	 <md-toolbar  class="md-toolbar-tools">
+							<div  class="md-medium-tall">
+							  <span >Layers&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/></span>
+							  <!-- fill up the space between left and right area -->
+							  <span flex><font style="font-size:x-small;cursor:pointer;"><a  title="Metadata" ng-click="showAlert($event)">Metadata</a></font></span>
+							 
+							</div>
+<div  class="md-medium-tall">
+		  <span flex>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style="font-size:small;text-align: center;">Group By</font><br/>	</span>
+		  <span>
+							<md-button id="programBtn" title="Group by Program" class="btn1" ng-click="showProgram()"  ng-disabled="programBtnChecked">
+								Program
+							  </md-button>
+							  	<md-button id="dataTypeBtn" title="Group by Content Type" class="btn1" ng-click="showDataType()" ng-disabled="!programBtnChecked">
+								Content Type
+							  </md-button>
+							  </span>
+							  </div>
+
+						  </md-toolbar>
+
+						  <!-- fancy tree layers -->
+						  <div id="spinner"  />
+						  <div id="layers" ng-show="programBtnChecked" />
+						 <div  id="layers-content" ng-show="!programBtnChecked" />
+
+
+					
+	<div id="myContainer" />
+
+				
+    
+						
+		</div>
+
+		<div id="paneSouth" class="ui-layout-south">
+
+		 <div ng-show="!extensionsBtnShow && !trawlCatchBtnShow && !trawlHaulCharsBtnShow && !trawlSpecimensBtnShow && !hookLineSpecimensBtnShow && !hookLineCatchBtnShow && !observerCatchBtnShow" >Table data buttons will appear here once a layer is selected in the Search Filters.</div>  
+
+
+		<form>
+			<div id="radio">
+				<table >
+				  <tr>
+					<th><div ng-show="extensionsBtnShow"><input type="radio" id="radio1" name="radio"><label for="radio1">Expansions</label></div></th>
+					<th><div ng-show="trawlCatchBtnShow"><input type="radio" id="radio2" name="radio"><label for="radio2">Trawl Catch</label></div></th>
+					<th><div ng-show="trawlHaulCharsBtnShow"><input type="radio" id="radio3" name="radio"><label for="radio3">Trawl Survey Hauls</label></div></th>
+					<th><div ng-show="trawlSpecimensBtnShow"><input type="radio" id="radio4" name="radio"><label for="radio4">Trawl Specimens</label></div></th>
+					<th><div ng-show="hookLineSpecimensBtnShow"><input type="radio" id="radio5" name="radio"><label for="radio5">Hook & Line Specimens</label></div></th>
+					<th><div ng-show="hookLineCatchBtnShow"><input type="radio" id="radio6" name="radio"><label for="radio6">Hook & Line Catch</label></div></th>
+					<th><div ng-show="observerCatchBtnShow"><input type="radio" id="radio7" name="radio"><label for="radio7">Observer Catch</label></div></th>
+				  </tr>
+				</table>
+			</div>
+		</form>
+			
+
+			<!-- Order of the tables matter for auto resizing -->
+			<!-- if you update the order, then also update view1.js -->
+			<table id="trawl_specimens_table"  class="display" cellspacing="0" width="100%" ></table>
+			<table id="trawl_haul_chars_table"  class="display" cellspacing="0" width="100%" ></table>
+			<table id="trawl_catch_table"   cellspacing="0" width="100%" ></table>			
+			<table id="hook_line_specimens_table"  class="display" cellspacing="0" width="100%" ></table>
+			<table id="hook_line_catch_table"  class="display" cellspacing="0" width="100%" ></table>
+			<table id="observer_catch_table"  class="display" cellspacing="0" width="100%" ></table>
+							
+
+			
+		  </div>
+
+
+
+</div>
+

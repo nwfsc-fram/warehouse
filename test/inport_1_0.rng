@@ -1,0 +1,157 @@
+<!-- Work-in-progress RELAX NG schema for InPort XML format
+
+See: https://www.st.nmfs.noaa.gov/jira/browse/IPH-1111
+
+Copyright (C) 2016 ERT Inc.
+-->
+<!-- per: http://relaxng.org/tutorial-20011203.html -->
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"  datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"><!-- format is specified as a rng grammar -->
+    <!-- main format is specified in grammar 'start' element -->
+    <!-- other reusable format elements in following 'define' elements -->
+    <start>
+        <element name="inport-metadata">
+            <attribute name="version">
+                <text/>
+            </attribute>
+            <choice><!-- Document can describe either a Data Set or an Entity -->
+                <group><!-- InPort Data Set -->
+                    <element name="item-identification">
+                        <ref name="catalog-item-id"/><!--may be Insert or Update-->
+                        <element name="catalog-item-type">
+                                <value type="string">Data Set</value>
+                        </element>
+                        <element name="title">
+                            <text/>
+                        </element>
+                    </element>
+                    <element name="entity-information">
+                        <element name="entity-type">
+                            <choice>
+                                <value type="string">Data File</value>
+                                <value type="string">Data Table</value>
+                                <value type="string">Data View</value>
+                                <value type="string">Form: Collection or Entry</value>
+                                <value type="string">Report</value>
+                                <value type="string">Spreadsheet</value>
+                                <value type="string">XML Document</value>
+                                <value type="string">Other</value>
+                            </choice>
+                        </element>
+                    </element>
+                </group>
+                <group><!-- InPort Entity -->
+                    <element name="item-identification">
+                        <ref name="catalog-item-id"/><!--may be Insert or Update-->
+                        <element name="catalog-item-type">
+                                <value type="string">Entity</value>
+                        </element>
+                        <element name="title">
+                            <text/>
+                        </element>
+                    </element>
+                    <element name="entity-information">
+                        <element name="entity-type">
+                            <choice>
+                                <value type="string">Data File</value>
+                                <value type="string">Data Table</value>
+                                <value type="string">Data View</value>
+                                <value type="string">Form: Collection or Entry</value>
+                                <value type="string">Report</value>
+                                <value type="string">Spreadsheet</value>
+                                <value type="string">XML Document</value>
+                                <value type="string">Other</value>
+                            </choice>
+                        </element>
+                        <optional>
+                            <element name="description">
+                                <text/>
+                            </element>
+                        </optional>
+                    </element>
+                    <optional>
+                        <element name="data-attributes">
+                            <optional>
+                                <attribute name="mode">
+                                    <choice>
+                                        <value type="string">replace</value>
+                                        <value type="string">add</value>
+                                    </choice>
+                                </attribute>
+                            </optional>
+                            <zeroOrMore>
+                                <ref name="data-attribute"/>
+                            </zeroOrMore>
+                        </element>
+                    </optional>
+                </group>
+            </choice>
+        </element>
+    </start>
+
+    <!-- XML elements reused in various parts of the InPort XML Format -->
+    <define name="catalog-item-id">
+        <choice><!-- Data Set document may be an Insert or Update -->
+            <element name="parent-catalog-item-id"><!-- Insert -->
+                <choice>
+                    <data type="nonNegativeInteger"/>
+                    <empty/>
+                </choice>
+            </element>
+            <element name="catalog-item-id"><!-- Update -->
+                <choice>
+                    <data type="nonNegativeInteger"/>
+                    <empty/>
+                </choice>
+            </element>
+        </choice>
+    </define>
+    <define name="data-attribute">
+        <element name="data-attribute">
+            <optional>
+                <element name="seq-order">
+                    <text/><!--TODO: define contents-->
+                </element>
+            </optional>
+            <element name="name">
+                <text/>
+            </element>
+            <element name="data-storage-type">
+                <text/><!--TODO: define contents-->
+            </element>
+            <element name="max-length">
+                <data type="int"/>
+            </element>
+            <optional>            
+                <element name="precision">
+                    <choice>
+                        <data type="nonNegativeInteger"/>
+                        <empty/>
+                    </choice>
+                </element>
+            </optional>
+            <element name="status">
+                <choice>
+                    <value type="string">Active</value>
+                    <value type="string">Inactive</value>
+                    <value type="string">In Development</value>
+                    <value type="string">In Review</value>
+                </choice>
+            </element>
+            <optional>            
+                <element name="description">
+                    <text/>
+                </element>
+            </optional>
+            <optional>            
+                <element name="units">
+                    <text/>
+                </element>
+            </optional>
+            <optional>            
+                <element name="allowed-values">
+                    <text/>
+                </element>
+            </optional>
+        </element>
+    </define>
+</grammar>

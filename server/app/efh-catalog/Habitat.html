@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<title>EFHRC Catalog: Substrate Data</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <script src="script/efh_catalog_page.js"></script>
+</head>
+
+<body>
+<img src="images/title.png" alt="Title" />
+<div id="header">
+<ul>
+	<li><a href="Overview2.html">Overview</a></li>
+	<li id="pl"><a href="PlatesCD.html">Substrate Maps</a></li>
+	<li id="pl"><a href="PlatesEF.html">Biogenic Maps</a></li>
+	<li id="pl"><a href="PlatesK.html">Effort Maps</a></li>
+	<li id="pl"><a href="Regulatory.html">MPA Maps</a></li>
+	<li id="selected"><a href="Habitat.html">Substrate Data</a></li>
+	<li id="dl"><a href="Bathy.html">Imagery Data</a></li>
+	<li id="dl"><a href="Biogenic.html">Biogenic Data</a></li>
+	<li id="dl"><a href="Effort.html">Effort Data</a></li>
+	<li id="dl"><a href="Synthesis.html">Synthesis Data</a></li>
+	<li id="ms"><a href="mapservice.html">Map Services</a></li>
+	<li id="md"><a href="metadata.html?catalog_row_number=456&d_type=2">Metadata</a></li>
+</ul>
+</div>
+<div id="content">
+<p>This catalog page provides links to habitat GIS data identified in the September 2012 <a href="http://www.pcouncil.org/wp-content/uploads/H6b_EFHRC_RPT_1_SEP2012BB.pdf" target="_blank"><b>Pacific Coast Groundfish 5-Year Review of Essential Fish Habitat Report to the Pacific Fishery Management CouncilPhase 1: New Information</b></a>.
+<br>Specifically, here we provide a means to access the data identified in Appendix C, table C-1.  We've taken every opprotunity to make sure that the links point to the original data provider when possible.<br> Therefore, clicking a data download button will typically initiate a download from the source provider.</p>
+<p>Data providers include and abbreviations in the "Originator" field are as follows: <b>CSUMB-SML</b> = California State University, Seafloor Mapping Lab; <b>MLML-CHS</b> = Moss Landing Marine Laboratories, Center for Habitat Studies;  <b>NOAA OE</b> = NOAA Ocean Explorer; <b>NOAA NOS</b> = NOAA National Ocean Survey; <b>NOAA PMEL</b> = NOAA Pacific Marine Environmental Laboratory; <b>NSF</b> = National Science Foundation; <b>NSF OOI</b> = NSF ocean Observing Initiative; <b>OCNMS</b> = Olympic Coast National Marine Sanctuary;  <b>OSU-AT&amp;SML</b> = Oregon State University, Active Tectonics &amp; Seafloor Mapping Lab;  <b>USGS</B> = United States Geological Survey; <b>USN</b> = United States Navy.
+<!--<p><b>&#42;</b> August 10, 2012 - Please Note, not all substrate data downloads are unique.  There are a few (9) instances where the substrate data download button will provide a zipfile that's identical to a download offered at a different row or Reference #.  The affected records are Rerence #'s: 119,152,153,154,155,157,165,173, and 174.  This is <u>not</u> a mistake though it may cause confusion.  The best or most current substrate map for each of these unique surveys has been incorporated into the Version 3.6 Benthic Habitat Map for Oregon.</p>-->
+<p><b>&#42;</b> March 16, 2013 - Please Note, not all substrate data downloads are unique.  There are instances where the substrate data download button will provide a zipfile that's identical to a download offered at a different row or Reference #.  This is <u>not</u> a mistake though it may cause confusion.  The reason for this duplication is that some sources have been integrated into larger compilations or aggregate maps. </p>
+<table border="0">
+<th>&nbsp;</th><th> Download All!</th>
+<tr>
+<td>Download All Substrate Data Below! Format = ArcGIS 10.0 map package (.mpk), use the Extract Map Package tool to unpack.</td>
+<td width="100" align="center"><a href="static/EFH_Downloads/AllData/T1_EFH_Habitat_05022013.mpk"><img src="images/ddata1.png" alt="download all data"/></a></td>
+<td>&nbsp;</tr>
+</tr>
+</table>
+<br>
+<table border="0" id="datasets">
+<th>Ref. No.</th><th>Plate No.</th><th>Dataset</th><th>Originator</th><th>Substrate</th><th>Metadata</th>
+    <script type="text/javascript">
+        //TODO: initialize page with loading message/prompt to enable JavaScript
+        // define function identifying a habitat Substrate Data row
+        function habitat(catalog_item) {
+            // check if EFH Catalog item is a Habitat item.
+            var last_habitat_item = 455;
+            if (catalog_item.catalog_row_number > last_habitat_item) {
+                return false;
+            }
+            var habitat_indicator = "Catalog item has habitat map data";
+            if (catalog_item.is_habitat != habitat_indicator) {
+                return false;
+            }
+            //must be a Habitat item!
+            return true;
+        }
+        // define function describing what these table rows should say
+        function addHabitatSubstrateRow (i, catalog_items, table) {
+          var dataset = catalog_items[i];
+          if (habitat(dataset) == false) {
+              return; //skip to next item
+          }
+          var row = table.insertRow(-1); //add one new row, to the end
+          // add table data, to the new row
+          var cell_ref = row.insertCell(0);
+          cell_ref.innerHTML = dataset.catalog_ref_number
+          var cell_plate = row.insertCell(1);
+          cell_plate.innerHTML = dataset.plate_number;
+          var cell_name = row.insertCell(2);
+          cell_name.innerHTML = dataset.site_name;
+          var cell_source = row.insertCell(3);
+          cell_source.innerHTML = dataset.habitat_source;
+          var cell_url = row.insertCell(4);
+          cell_url.innerHTML = '<a href="'+dataset.habitat_url+'"><img src="images/ddata1.png" alt="download data"/></a>';
+          cell_url.style.width = "100px";
+          cell_url.align = "center";
+          var cell_metadata = row.insertCell(5);
+          cell_metadata.innerHTML = '<a href="metadata.html?catalog_row_number='+dataset.catalog_row_number+'&d_type=2"><img src="images/metadata1.png" alt="download metadata"/></a>';
+          cell_metadata.style.width = "100px";
+          cell_metadata.align = "center";
+        }
+        // populate table
+        populate_catalog_item_table(addHabitatSubstrateRow);
+    </script>
+</table>
+</div>
+</body>
+</html>
+

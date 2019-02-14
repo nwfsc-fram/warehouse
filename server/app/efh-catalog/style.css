@@ -1,0 +1,107 @@
+@charset "utf-8";
+/* CSS Document */
+    
+    body {
+            font: 0.80em arial, helvetica, sans-serif;
+            background: White url(images/bg-globe-color.png) no-repeat top left fixed;
+    }
+    
+    #header ul {
+	    list-style: none;
+	    padding: 0;
+	    margin-left: 75px;
+}
+
+    #header li {
+	    float: left;
+	    border: 1px solid #bbb;
+	    border-bottom-width: 0;
+}
+
+    #header a {
+	    text-decoration: none;
+	    display: block;
+	    background: #eee;
+	    padding: 0.2em 0.1em;
+	    color: #00c;
+	    width: 8em;
+	    text-align: center;
+}
+    
+    #header #selected {
+	    border-color: black;
+    }
+    
+    #header #selected a {
+	    position: relative;
+	    top: 1px;
+	    background: #ccc;
+	    color: black;
+	    font-weight: bold;
+    }
+
+    #header #pl a {
+	    position: relative;
+	    top: 1px;
+	    background: #D6EBFF;
+    }
+       
+    #header #dl a {
+	    position: relative;
+	    top: 1px;
+	    background: #CCFFCC;
+    }
+    
+    #header #md a {
+	    position: relative;
+	    top: 1px;
+	    background: #FFDBDB;
+    }
+    
+    #header #ms a {
+	    position: relative;
+	    top: 1px;
+	    background: #FFFFCC;
+    }
+    
+    #header a:hover {
+	    background: #ddf;
+    }
+    
+    #content {
+	    border: 1px solid black;
+	    background-color:#ffffff;
+	    opacity:0.8;
+	    filter:alpha(opacity=60); /* For IE8 and earlier */
+	    clear: both;
+	    padding: 0 1em;
+	    margin-left:75px;
+		width:1255px;
+		height:800px;
+		overflow:auto;"
+    }
+	
+	    #content2 {
+	    border: 1px solid black;
+	    background-color:#ffffff;
+	    opacity:0.8;
+	    filter:alpha(opacity=60); /* For IE8 and earlier */
+	    clear: both;
+	    padding: 0 1em;
+	    margin-left:75px;
+    }
+    
+    #help {
+	    border: 1px solid black;
+	    background-color:#ffffff;
+	    opacity:0.8;
+	    filter:alpha(opacity=60); /* For IE8 and earlier */
+	    clear: both;
+	    padding: 0 1em;
+	    margin-left:75px;
+    }
+    
+    h1 {
+            margin: 0;
+            padding: 0 0 1em 0;
+    }

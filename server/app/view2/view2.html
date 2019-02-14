@@ -1,0 +1,463 @@
+
+
+<style>
+
+
+#cesiumContainer {
+ overflow: hidden; }
+
+.ui-layout-pane-west  { 
+		width:	300px;
+
+
+	} 
+
+
+		.ui-layout-resizer-west { width:500px; }
+
+
+
+
+svg {
+  font: 10px sans-serif;
+}
+
+.area {
+  fill: steelblue;
+  clip-path: url(#clip);
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.brush .extent {
+  stroke: #fff;
+  fill-opacity: .125;
+  shape-rendering: crispEdges;
+}
+
+
+iframe.width-changed {
+    width: 100%;
+    display: block;
+    border: 0;
+    height: 0;
+    margin: 0;
+}
+
+.fullSize {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: none;
+    width: 100%;
+    height: 100%;
+}
+
+#legend {
+  color: #000;
+    font-family: sans-serif;
+    font-size: 12pt;
+	font-weight: bold;
+    top: 2%;
+	left: 71%;
+    position: absolute;
+    overflow: auto;
+	height: auto;
+    		width: 250px;
+	   z-index: 500;
+
+}
+
+#lat-long {
+  color: #eee;
+    font-family: sans-serif;
+    font-size: 12pt;
+	font-weight: bold;
+    top: 90%;
+	left: 79%;
+    position: absolute;
+	   z-index: 500;
+
+}
+.leaflet-left
+{
+    margin-top: 100px;
+}
+
+.leaflet-popup-content
+{
+  width:475px !important;
+}
+
+.leaflet-popup-content .display
+{
+  width:475px !important;
+}
+
+.leaflet-touch .leaflet-bar button {
+  width: 31px;
+  height: 31px;
+  line-height: 35px;
+}
+
+.leaflet-touch .leaflet-control-layers-toggle{
+  width: 31px;
+  height: 31px;
+  line-height: 35px;
+}
+
+.fa-2x {
+    font-size: 1.5em;
+}
+
+
+#logo {
+  color: #eee;
+    font-family: sans-serif;
+    font-size: 9pt;
+    position: absolute;z-index: 400;
+}
+
+#login {
+position:absolute;top:7px;right:230px;width:44px;height:44px;z-index: 400;
+}
+
+a.login:link {color:#ffffff;}
+a.login:visited {color:#ffffff;}
+a.login:hover {color:#ffffff;}
+
+#citation {
+position:absolute;top:7px;right:185px;width:44px;height:44px;z-index: 400;
+}
+#api {
+position:absolute;top:7px;right:140px;width:44px;height:44px;z-index: 400;
+}
+
+#contactUs {
+position:absolute;top:7px;right:95px;width:44px;height:44px;z-index: 400;
+}
+
+#about {
+position:absolute;top:7px;right:50px;width:44px;height:44px;z-index: 400;
+}
+
+#baseLayerPickerContainer {
+position:absolute;top:4px;right:118px;width:38px;height:38px;
+  color: #eee;
+    font-family: sans-serif;
+    font-size: 9pt;
+
+}
+
+
+#logo-rectangle {
+	width: 290px;
+	height: 100px;
+	top:5px;
+	    position: absolute;
+	left: 2px;z-index: 400;
+		background-color:rgba(0, 0, 0, 0.3);
+border-radius: 14px;
+-moz-border-radius: 14px; 
+-webkit-border-radius: 14px; 
+
+}
+
+#legend-rectangle {
+	width: 260px;
+	height: 270px;
+    top: 1%;
+	left: 70%;
+	overflow: auto;
+	    position: absolute;
+	z-index: 400;
+		background-color:rgba(255, 255, 255, 0.8);
+border-radius: 14px;
+-moz-border-radius: 14px;
+-webkit-border-radius: 14px;
+
+}
+
+#latlong-rectangle {
+	width: 220px;
+	height: 70px;
+    top: 88%;
+	left: 77%;
+	    position: absolute;
+	z-index: 400;
+		background-color:rgba(0, 0, 0, 0.3);
+border-radius: 14px; 
+-moz-border-radius: 14px; 
+-webkit-border-radius: 14px; 
+
+}
+
+#title {
+  color: #eee;
+    font-family: sans-serif;
+    font-size: 30pt;
+    position: absolute;
+	left: 85px;z-index: 400;
+}
+
+#data_warehouse {
+  color: #eee;
+    font-family: sans-serif;
+    font-size: 20pt;
+    position: absolute;
+	left: 85px;
+	top: 67px;z-index: 400;
+
+}
+
+
+.chipsdemoCustomInputs md-content.autocomplete {
+  min-height: 2000px; }
+
+.btn1 {
+  padding: 0 6px 0 6px;
+  margin: 0px 0px 0px 6px;
+  min-width: 54px;
+  border-radius: 3px;
+  font-size: 11px;
+  text-align: center;
+  text-decoration:none;
+  border: none;
+  outline: none;
+   text-transform: none;
+
+
+}
+
+.btn1[disabled] {
+  background-color: #e6e6ff;
+
+}
+
+  .controller .autocomplete input {
+    min-width: 305px; }
+
+
+.metadataEven {
+font-size: 12px;
+background-color: #E2E4FF; 
+}
+.metadataOdd {
+font-size: 12px;
+background-color: #FFFFFF; 
+}
+.metadataHeader {
+font-size: 15px;
+}
+
+
+ #map { position: absolute; top:0; bottom:0; right:0; left:0; }
+
+   #basemaps-wrapper {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 500;
+    padding: 10px;
+  }
+
+.extra-marker i {
+    font-size: 24px;
+    margin-top: 5px;
+}
+
+
+
+.md-datepicker-input-container {
+  width: 90px;
+}
+
+
+a {
+  color: #337ab7;
+  text-decoration: none;
+}
+a:hover,
+a:focus {
+  color: #23527c;
+  text-decoration: underline;
+}
+a:focus {
+  outline: thin dotted;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+
+.slider-width-custom
+{
+    width: 70px !important;
+    min-width: 70px !important;
+    vertical-align: middle;
+}
+
+
+
+.md-datepicker-input{
+    max-width:150px !important;
+	min-width: 70px !important;
+}
+
+.md-icon-button+.md-datepicker-input-container{
+    margin-left: 0px;
+}
+
+.md-datepicker-button.md-icon-button {
+  display: none;
+}
+
+
+</style>
+
+
+
+
+<div ng-controller="View2Ctrl as ctrl"  class="controller"> 
+
+
+      <div id="paneCenter" class="ui-layout-center">
+
+
+			 <!--<div flex id="cesiumContainer" class="fullSize"/>-->
+			 <div id="map"  class="fullSize"> </div>
+
+			<!--<div class="citation" ><IMG SRC="images/chat_white.png" id="citation" WIDTH="32" HEIGHT="32" BORDER=0 ALT="Citation and Proper Usage" title="Citation and Proper Usage"  /></div>-->
+			<!--<div class="api"><IMG SRC="images/api_white.png" id="api" WIDTH="32" HEIGHT="32" BORDER=0 ALT="Application Programming Interface (API)" title="Application Programming Interface (API)" /></div>-->
+			<!--<div class="contactUs"><IMG SRC="images/email_white.png" id="contactUs" WIDTH="32" HEIGHT="32" BORDER=0 ALT="Contact Us"  title="Contact Us" /></div>-->
+			<!--<div class="about"><IMG SRC="images/info_white.png" id="about" WIDTH="32" HEIGHT="32" BORDER=0 ALT="About FRAM Data Warehouse" title="About FRAM Data Warehouse"  /></div>-->
+			<!--<div class="login"><IMG SRC="images/lock white.png" id="login" WIDTH="32" HEIGHT="32" BORDER=0 ALT="Login" title="Login"  /></div>-->
+
+		
+
+		<div id="logo-rectangle" >&nbsp;</div>
+
+			<div id="logo">
+				<a href="http://www.nwfsc.noaa.gov" target="_blank"><IMG SRC="images/NOAA_logo.png" WIDTH="70" HEIGHT="70" BORDER=0 ALT="NOAA Logo"></a>
+			
+			</div>
+			<div id="title" >FRAM</div>
+			<div id="data_warehouse">Data Warehouse</div>
+
+		  <div id="legend-rectangle" >&nbsp;</div>
+		  <div id="legend" />
+
+					<div id="latlong-rectangle" >&nbsp;</div>
+	<div id="lat-long"/>
+
+		</div> <!-- END Layout Center -->
+
+	
+		<div id="paneEast" class="ui-layout-east">
+		    <md-toolbar class="md-theme-indigo">
+        <h1 class="md-toolbar-tools">Graph</h1>
+
+      </md-toolbar>
+		
+		</div>
+		<div id="paneWest" class="ui-layout-west">
+				
+
+			  <md-content  class="autocomplete"  layout="column">
+
+				 <md-toolbar id="searchFilter" class="md-toolbar-tools">
+					<div class="md-medium-tall">
+					  <span>Search Filters</span>
+
+					</div>
+				  </md-toolbar>
+
+
+					<md-chips ng-model="ctrl.selectedSpecies"  md-autocomplete-snap="" md-require-match="true">
+					  <md-autocomplete flex 
+						md-selected-item="ctrl.selectedItem" 
+						md-search-text="ctrl.searchText" 
+						md-items="item in ctrl.querySearch(ctrl.searchText)" 
+						md-item-text="item.species"   
+						placeholder="Search for species" 
+						md-min-length=3  md-autoselect ng-disabled="disableSpeciesFilter">
+						<span md-highlight-text="ctrl.searchText">{{item.common_name}} ({{item.scientific_name}})</span>
+					  </md-autocomplete>
+					  <md-chip-template>
+						<span class="item-title">
+						  <strong>{{$chip.common_name}}</strong>
+						  <em>({{$chip.scientific_name}})</em>
+						</span>
+					  </md-chip-template>
+					</md-chips>
+
+		 <md-toolbar  class="md-toolbar-tools">
+							<div  class="md-medium-tall">Time Filter&nbsp;&nbsp;<font style="font-size:x-small;">Click + Drag to Select Time</a></font>
+							</div>
+
+
+
+						  </md-toolbar>
+		<div  flex-gt-xs style="margin:4px">
+				Start:&nbsp;<md-datepicker  ng-change="updateTimeplayer()" ng-model="ctrl.startDate" md-placeholder="Enter start date" md-open-on-focus></md-datepicker>
+			  &nbsp;&nbsp;End:&nbsp;<md-datepicker  ng-change="updateTimeplayer()" ng-model="ctrl.endDate" md-placeholder="Enter end date"  md-open-on-focus></md-datepicker>
+			</div>
+							<timeplayer ng-show="showTimeplayer" />
+
+
+
+
+	 <md-toolbar  class="md-toolbar-tools">
+							<div  class="md-medium-tall">
+							  <span >Layers&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/></span>
+							  <!-- fill up the space between left and right area -->
+							  <span flex><font style="font-size:x-small;cursor:pointer"><a href="/data/metadatalist" style="!important;color:white" target="_blank" title="Metadata" >Metadata</a></font></span>
+
+							</div>
+<!--<div  class="md-medium-tall">-->
+		  <!--<span flex>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font style="font-size:small;text-align: center;">Group By</font><br/>	</span>-->
+		  <!--<span>-->
+							<!--<md-button id="programBtn" title="Group by Program" class="btn1" ng-click="showProgram()"  ng-disabled="programBtnChecked">-->
+								<!--Program-->
+							  <!--</md-button>-->
+							  	<!--<md-button id="dataTypeBtn" title="Group by Content Type" class="btn1" ng-click="showDataType()" ng-disabled="!programBtnChecked">-->
+								<!--Content Type-->
+							  <!--</md-button>-->
+							  <!--</span>-->
+							  <!--</div>-->
+
+						  </md-toolbar>
+
+
+						  <!-- fancy tree layers -->
+
+						  <div id="spinner"  />
+						  <div id="layers" ng-show="programBtnChecked" />
+						 <!--<div  id="layers-content" ng-show="!programBtnChecked" />-->
+
+
+	<div id="myContainer" />
+
+
+
+
+
+
+		</div>
+
+
+<script>
+  function popup(mylink, windowname) { 
+    if (! window.focus)return true;
+    var href;
+    if (typeof(mylink) == 'string') href=mylink;
+    else href=mylink.href; 
+    window.open(href, windowname, 'width=220,height=273,scrollbars=no,resizable=no'); 
+    return false; 
+  }
+
+</script>

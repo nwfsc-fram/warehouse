@@ -1,0 +1,53 @@
+{
+  "name": "angular-material",
+  "homepage": "https://material.angularjs.org",
+  "version": "0.8.3",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/angular/material.git"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/angular/material/blob/master/LICENSE"
+    }
+  ],
+  "keywords": [
+    "angular",
+    "material",
+    "browser",
+    "client-side"
+  ],
+  "peerDependencies": {
+    "angular": "1.3.x",
+    "angular-animate": "1.3.x",
+    "angular-aria": "1.3.x"
+  },
+  "bugs": {
+    "url": "https://github.com/angular/material/issues"
+  },
+  "gitHead": "581d64fef23ce04ed2831a2ef0f14615fdb9aeb1",
+  "description": "This repo is for distribution on `npm` and `bower`. The source for this module is in the [main Angular Material repo](https://github.com/angular/material). Please file issues and pull requests against that repo.",
+  "_id": "angular-material@0.8.3",
+  "scripts": {},
+  "_shasum": "adb6a93f6d2718d6756f0fcaead61aedc248208e",
+  "_from": "angular-material@~0.8.3",
+  "_npmVersion": "1.4.28",
+  "_npmUser": {
+    "name": "angularcore",
+    "email": "angular-core+npm@google.com"
+  },
+  "maintainers": [
+    {
+      "name": "angularcore",
+      "email": "angular-core+npm@google.com"
+    }
+  ],
+  "dist": {
+    "shasum": "adb6a93f6d2718d6756f0fcaead61aedc248208e",
+    "tarball": "http://registry.npmjs.org/angular-material/-/angular-material-0.8.3.tgz"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/angular-material/-/angular-material-0.8.3.tgz"
+}

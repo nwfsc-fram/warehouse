@@ -1,0 +1,6 @@
+name: test-env
+dependencies:
+  - python=3.6.4
+  - pip
+  - pandas=0.19.2
+  - lxml

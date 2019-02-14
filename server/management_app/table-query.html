@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
+<html ng-app="queryApp" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Manage > Default Columns - NWFSC/FRAM Data Warehouse</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script src="angular/ControllerTableQuery.js"></script>
+    <!-- DataTables -->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/select/1.2.0/js/dataTables.select.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.1/js/dataTables.buttons.min.js"></script>
+	<script type="text/javascript" src="static/Editor-1.5.6/js/dataTables.editor.js"></script>
+    <script src="script/table-query.js"></script>
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.2.0/css/select.dataTables.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.2.1/css/buttons.dataTables.min.css"/>
+	<link rel="stylesheet" type="text/css" href="static/Editor-1.5.6/css/editor.dataTables.min.css"/>
+    <base href="/management/">
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  </head>
+  <body>
+    <h2>Data Warehouse Management</h2>
+    <a href="index.html">login</a> > Default Columns
+    <div>
+      <h2>Default Columns</h2>
+        <div ng-controller="SourceFormController as src">
+        <form name="src.sourceForm" id="source-form" novalidate class="simple-form">
+          Manage Table: <input type="text" name="table" ng-model="table"/>
+          from Project: <input type="text" name="project" ng-model="project"/>
+          <input type="submit" value="Load Columns" ng-click="submit()" formtarget="output"/>
+        </form>
+        </div>
+
+      <table id="queries" class="display" cellspacing="0" width="100%">
+        <thead>
+          <tr>
+            <th>Association</th>
+            <th>Table</th>
+            <th>Column</th>
+            <th>Title</th>
+            <th>Alias</th>
+            <th>Defaults</th>
+          </tr>
+        </thead>
+      </table>
+
+      <p>
+        <h3>API Output:</h3>
+        <iframe	name="output" src="../api/v1/user" width="100%"/>
+      </p>
+    </div>
+  </body>
+</html>

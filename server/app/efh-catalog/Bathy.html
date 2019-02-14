@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<title>EFHRC Catalog: Bathy Data</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <script src="script/efh_catalog_page.js"></script>
+</head>
+
+<body>
+<img src="images/title.png" alt="Title" />
+<div id="header">
+<ul>
+	<li><a href="Overview2.html">Overview</a></li>
+	<li id="pl"><a href="PlatesCD.html">Substrate Maps</a></li>
+	<li id="pl"><a href="PlatesEF.html">Biogenic Maps</a></li>
+	<li id="pl"><a href="PlatesK.html">Effort Maps</a></li>
+	<li id="pl"><a href="Regulatory.html">MPA Maps</a></li>
+	<li id="dl"><a href="Habitat.html">Substrate Data</a></li>
+	<li id="selected"><a href="Bathy">Imagery Data</a></li>
+	<li id="dl"><a href="Biogenic.html">Biogenic Data</a></li>
+	<li id="dl"><a href="Effort.html">Effort Data</a></li>
+	<li id="dl"><a href="Synthesis.html">Synthesis Data</a></li>
+	<li id="ms"><a href="mapservice.html">Map Services</a></li>
+	<li id="md"><a href="metadata.html?catalog_row_number=456&d_type=2">Metadata</a></li>
+</ul>
+</div>
+<div id="content">
+<p>This catalog page provides links to bathymetry or imagery data identified in the September 2012 <a href="http://www.pcouncil.org/wp-content/uploads/H6b_EFHRC_RPT_1_SEP2012BB.pdf" target="_blank"><b>Pacific Coast Groundfish 5-Year Review of Essential Fish Habitat Report to the Pacific Fishery Management CouncilPhase 1: New Information</b></a>.
+<br>Specifically, here we provide a means to access the data identified in Appendix C, table C-1.  We've taken every opprotunity to make sure that the links point to the original data provider when possible.<br> Therefore, clicking a data download button will typically initiate a download from the source provider.</p>
+<p>Data providers include and abbreviations in the "Originator" field are as follows: <b>CSUMB-SML</b> = California State University, Seafloor Mapping Lab; <b>MLML-CHS</b> = Moss Landing Marine Laboratories, Center for Habitat Studies;  <b>NOAA OE</b> = NOAA Ocean Explorer; <b>NOAA NOS</b> = NOAA National Ocean Survey; <b>NOAA PMEL</b> = NOAA Pacific Marine Environmental Laboratory; <b>NSF</b> = National Science Foundation; <b>NSF OOI</b> = NSF ocean Observing Initiative; <b>OCNMS</b> = Olympic Coast National Marine Sanctuary;  <b>OSU-AT&amp;SML</b> = Oregon State University, Active Tectonics &amp; Seafloor Mapping Lab;  <b>USGS</B> = United States Geological Survey; <b>USN</b> = United States Navy.
+<table border="0">
+	<th>&nbsp;</th><th> Download Regional Imagery</th>
+		<tr>
+			<td>Download Washington/Oregon Regional Bathymetry: Format = ArcGIS 10.0 map package (.mpk), use the Extract Map Package tool to unpack.</td>
+			<td width="100" align="center"><a href="static/EFH_Downloads/AllData/WestCoastRegionalBathyORWA.mpk"><img src="images/ddata1.png" alt="download all data"/></a></td>
+			<td>&nbsp;</tr>
+		</tr>
+		<tr>
+			<td>Download California Regional Bathymetry: Format = ArcGIS 10.0 map package (.mpk), use the Extract Map Package tool to unpack.</td>
+			<td width="100" align="center"><a href="static/EFH_Downloads/AllData/WestCoastRegionalBathyCA.mpk"><img src="images/ddata1.png" alt="download all data"/></a></td>
+			<td>&nbsp;</tr>
+		</tr>
+ </table>
+<table border="0" id="datasets">
+<th>Ref. No.</th><th>Plate No.</th><th>Dataset</th><th>Bathy Source</th><th>Imagery Source</th><th>Bathy</th><th>Bathy Metadata</th><th>Imagery</th><th>Imagery Metadata</th>
+<!--
+    ref       = sheet0.col_values(0,1,456)
+    row       = sheet0.col_values(1,1,456)
+    plate     = sheet0.col_values(2,1,456)
+    bathy     = sheet0.col_values(3,1,456)
+    bsktr     = sheet0.col_values(4,1,456)
+    sitenames = sheet0.col_values(6,1,456)
+    Z_source  = sheet0.col_values(23,1,456)
+    I_source  = sheet0.col_values(24,1,456)
+    Z_link     = sheet0.col_values(27,1,456)
+    I_link     = sheet0.col_values(28,1,456)-->
+    <script type="text/javascript">
+        //TODO: initialize page with loading message/prompt to enable JavaScript
+        // define function identifying an Imagery Data row
+        var bathy_indicator = "Catalog item has bathymetry data";
+        var backscatter_indicator = "Catalog item has backscatter imagery data";
+        function imagery(catalog_item) {
+            // check if EFH Catalog item is an Imagery item.
+            var last_imagery_item = 455;
+            if (catalog_item.catalog_row_number > last_imagery_item) {
+              return false;
+            }
+            if (catalog_item.is_bathymetry!=bathy_indicator && catalog_item.is_backscatter!=backscatter_indicator) {
+              return false;
+            }
+            //must be an Imagery item!
+            return true;
+        }
+        // define function describing what these table rows should say
+        function addRow (i, catalog_items, table) {
+          var dataset = catalog_items[i];
+          if (imagery(dataset) == false) {
+              return; //skip to next item
+          }
+          // determine what data will be added to the row
+          if (dataset.is_bathymetry==bathy_indicator && dataset.is_backscatter==backscatter_indicator) {
+            var z_source = dataset.bathy_source;
+            var z_icon = 'images/ddata1.png';
+            var z_meta_icon = 'images/metadata1.png';
+            var i_source = dataset.backscatter_source;
+            var i_icon = 'images/ddata1.png';
+            var i_meta_icon = 'images/metadata1.png';
+          } else if (dataset.is_bathymetry==bathy_indicator) {
+            var z_source = dataset.bathy_source;
+            var z_icon = 'images/ddata1.png';
+            var z_meta_icon = 'images/metadata1.png';
+            var i_source = 'no_imagery';
+            var i_icon = 'images/blank.png';
+            var i_meta_icon = 'images/blank.png';
+          } else if (dataset.is_backscatter==backscatter_indicator) {
+            var z_source = 'no_bathy';
+            var z_icon = 'images/blank.png';
+            var z_meta_icon = 'images/blank.png';
+            var i_source = dataset.backscatter_source;
+            var i_icon = 'images/ddata1.png';
+            var i_meta_icon = 'images/metadata1.png';
+          }
+
+          var row = table.insertRow(-1); //add one new row, to the end
+          // add table data, to the new row
+          var cell_ref = row.insertCell(0);
+          cell_ref.innerHTML = dataset.catalog_ref_number
+          var cell_plate = row.insertCell(1);
+          cell_plate.innerHTML = dataset.plate_number.replace(new RegExp("[.]*[0]*$"), "");
+          var cell_name = row.insertCell(2);
+          cell_name.innerHTML = dataset.site_name;
+          var cell_z_source = row.insertCell(3);
+          cell_z_source.innerHTML = z_source;
+          var cell_i_source = row.insertCell(4);
+          cell_i_source.innerHTML = i_source;
+          var cell_z_url = row.insertCell(5);
+          cell_z_url.innerHTML = '<a href="'+dataset.bathy_url+'"><img src="'+z_icon+'" alt="download bathy data"/></a>';
+          var cell_z_metadata = row.insertCell(6);
+          cell_z_metadata.innerHTML = '<a href="metadata.html?catalog_row_number='+dataset.catalog_row_number+'&d_type=0"><img src="'+z_meta_icon+'" alt="download bathy metadata"/></a>';
+          var cell_i_url = row.insertCell(7);
+          cell_i_url.innerHTML = '<a href="'+dataset.backscatter_url+'"><img src="'+i_icon+'" alt="download backscatter data"/></a>';
+          var cell_i_metadata = row.insertCell(8);
+          cell_i_metadata.innerHTML = '<a href="metadata.html?catalog_row_number='+dataset.catalog_row_number+'&d_type=1"><img src="'+i_meta_icon+'" alt="download backscatter metadata"/></a>';
+          // center the last four Table cells
+          var center_cells = [cell_z_url, cell_z_metadata, cell_i_url, cell_i_metadata];
+          for (var j=0; j<center_cells.length; j++) {
+            var cell = center_cells[j];
+            cell.style.width = "100px";
+            cell.align = "center";
+          }
+        }
+        // populate table
+        populate_catalog_item_table(addRow);
+    </script>
+</table>
+</div>
+</body>
+</html>
+

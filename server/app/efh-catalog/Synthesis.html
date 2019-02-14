@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<title>EFHRC Catalog: Synthesis Data</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <script src="script/efh_catalog_page.js"></script>
+</head>
+
+<body>
+<img src="images/title.png" alt="Title" />
+<div id="header">
+<ul>
+	<li><a href="Overview2.html">Overview</a></li>
+	<li id="pl"><a href="PlatesCD.html">Substrate Maps</a></li>
+	<li id="pl"><a href="PlatesEF.html">Biogenic Maps</a></li>
+	<li id="pl"><a href="PlatesK.html">Effort Maps</a></li>
+	<li id="pl"><a href="Regulatory.html">MPA Maps</a></li>
+	<li id="dl"><a href="Habitat.html">Substrate Data</a></li>
+	<li id="dl"><a href="Bathy.html">Imagery Data</a></li>
+	<li id="dl"><a href="Biogenic.html">Biogenic Data</a></li>
+	<li id="dl"><a href="Effort.html">Effort Data</a></li>
+	<li id="selected"><a href="Synthesis.html">Synthesis Data</a></li>
+	<li id="ms"><a href="mapservice.html">Map Services</a></li>
+	<li id="md"><a href="metadata.html?catalog_row_number=456&d_type=2">Metadata</a></li>
+</ul>
+</div>
+<div id="content">
+<p><u><b>Briefing Book:</u></b> Quick links to draft Synthesis Documents at the PFMC website</p>
+<ul>
+	<li><a href="http://www.pcouncil.org/wp-content/uploads/D6b_NMFS_SYNTH_ELECTRIC_ONLY_APR2013BB.pdf" target="_blank">Agenda Item D.6.b: Groundfish Essential Fish Habitat Synthesis Report</a></li>
+	<li><a href="http://www.pcouncil.org/wp-content/uploads/D6b_SUP_NMFS_USERGUIDE_APR2013BB.pdf" target="_blank">Agenda Item D.6.b: User Guide and Conclusions: Groundfish Essential Fish Habitat Synthesis Report</a></li>
+</ul>
+<p><u><b>Final Documents:</u></b> Quick links to Final Synthesis Documents at the PFMC website (May 4th, 2013).</p>
+<ul>
+	<li><a href="http://www.pcouncil.org/wp-content/uploads/Groundfish_EFH_Synthesis_Report_to_PFMC_FINAL.pdf" target="_blank">NMFS Synthesis Report</a></li>
+	<li><a href="http://www.pcouncil.org/wp-content/uploads/Appendix_to_Groundfish_EFH_Synthesis_Report_to_PFMC_FINAL.pdf" target="_blank">NMFS Synthesis Report Appendices</a></li>
+</ul>
+<p>Download an ESRI Map Package containting Synthesis Report datasets below:</p>
+<p><b>Please note that if you experience problems unpacking the map package with ESRI tools, you may alternately "unzip" the package with a zip tool like 7Zip or WinZip.</b></p>
+<br>
+<table border="0" id="datasets">
+<th>Theme</th><th>Map Author</th><th>Map Description</th><th>Download</th><th>Metadata</th>
+    <script type="text/javascript">
+        //TODO: initialize page with loading message/prompt to enable JavaScript
+        // define variable, specifying which FRAM dataset to fetch
+        var fram_dataset_id = "efh.efh_synthesis_fact"
+        // define function describing what these table rows should say
+        function addSynthesisRow (i, catalog_items, table) {
+          var dataset = catalog_items[i];
+
+          var row = table.insertRow(-1); //add one new row, to the end
+          // add table data, to the new row
+          var cell_theme = row.insertCell(0);
+          cell_theme.innerHTML = dataset.theme
+          var cell_author = row.insertCell(1);
+          cell_author.innerHTML = dataset.author_description;
+          var cell_product = row.insertCell(2);
+          cell_product.innerHTML = dataset.product_name;
+          var cell_url = row.insertCell(3);
+          cell_url.innerHTML = '<a href="'+dataset.url+'"><img src="images/ddata1.png" alt="download data"/></a>';
+          cell_url.style.width = "100px";
+          cell_url.align = "center";
+          var cell_note = row.insertCell(4);
+          cell_note.innerHTML = "All GIS data layers include ESRI format metadata!  See Synthesis Appendix for more information.";
+        }
+        // populate table
+        populate_fram_item_table(fram_dataset_id, addSynthesisRow);
+    </script>
+</table>
+</div>
+</body>
+</html>
+

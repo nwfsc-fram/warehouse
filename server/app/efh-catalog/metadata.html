@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html ng-app="efhMetadata" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>EFHRC Catalog: Metadata</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-sanitize.min.js"></script>
+    <script src="angular/controller_metadata.js"></script>
+</head>
+
+<body>
+<img src="images/title.png" alt="Title" />
+<div id="header">
+<ul>
+	<li><a href="Overview2.html" target="_self">Overview</a></li>
+	<li id="pl"><a href="PlatesCD.html" target="_self">Substrate Maps</a></li>
+	<li id="pl"><a href="PlatesEF.html" target="_self">Biogenic Maps</a></li>
+	<li id="pl"><a href="PlatesK.html" target="_self">Effort Maps</a></li>
+	<li id="pl"><a href="Regulatory.html" target="_self">MPA Maps</a></li>
+	<li id="dl"><a href="Habitat.html" target="_self">Substrate Data</a></li>
+	<li id="dl"><a href="Bathy.html" target="_self">Imagery Data</a></li>
+	<li id="dl"><a href="Biogenic.html" target="_self">Biogenic Data</a></li>
+	<li id="dl"><a href="Effort.html" target="_self">Effort Data</a></li>
+	<li id="dl"><a href="Synthesis.html" target="_self">Synthesis Data</a></li>
+	<li id="ms"><a href="mapservice.html" target="_self">Map Services</a></li>
+	<li id="selected"><a href="metadata.html?catalog_row_number=456&d_type=2">Metadata</a></li>
+</ul>
+</div>
+<div id="content" ng-controller="efhMetadataTableController as tableController">
+<table border="0">
+  <tr>
+    <td>Ref.#:</td><td ng-bind-html="tableController.model.ref | linky">{{tableController.model.ref}}</td>
+  </tr>
+    <tr>
+    <td>Site Name(s):</td><td>{{ tableController.model.name }}</td>
+  </tr>
+  <tr>
+    <td>File Name(s):</td><td>{{ tableController.model.filename }}</td>
+  </tr>
+  <tr>
+    <td>Item Type(s):</td><td>{{ tableController.model.type }}</td>
+  </tr>
+  <tr>
+    <td>Item Format:</td><td>{{ tableController.model.format }}</td>
+  </tr>
+  <tr>
+    <td>Classification:</td><td>{{ tableController.model.classification }}</td>
+  </tr>
+  <tr>
+    <td>Extents:</td>
+  </tr>
+  <tr>
+    <td>North:</td><td>{{ tableController.model.north }}</td>
+  </tr>
+  <tr>
+    <td>West:</td><td>{{ tableController.model.west }}</td>
+  </tr>
+  <tr>
+    <td>South:</td><td>{{ tableController.model.south }}</td>
+  </tr>
+  <tr>
+    <td>East:</td><td>{{ tableController.model.east }}</td>
+  </tr>
+  <tr><td>Resolution:</td><td>{{ tableController.model.res }}</td>
+  </tr>
+  </tr>
+  <tr><td>Projection:</td><td>{{ tableController.model.proj }}</td>
+  </tr>
+  </tr>
+  <tr><td>Management:</td><td>{{ tableController.model.mgmt }}</td>
+  </tr>
+  <tr>
+    <td>Source(s):</td><td> {{ tableController.model.source }}</td>
+  </tr>
+  <tr>
+    <td>Date (survey/pub):</td><td>{{ tableController.model.date }}</td>
+  </tr>
+  <tr>
+    <td>URL:</td><td><a href="{{ tableController.model.url }}" target="_blank">{{ tableController.model.url }}</a></td>
+  </tr>
+  <tr>
+    <td>Point of Contact:</td><td>{{ tableController.model.contact }}</td>
+  </tr>
+  <tr>
+    <td>Reference:</td><td>{{ tableController.model.reference }}</td>
+  </tr>
+  <tr>
+    <td>Comments</td><td>{{ tableController.model.comments }}</td>
+  </tr>
+</table>
+</div>
+</body>
+</html>
+

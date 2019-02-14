@@ -1,0 +1,121 @@
+<style>
+    #logo {
+        position: absolute;
+        left: 10px; top: 10px ;z-index: 400;  
+    }
+
+    #heading {
+        font-family: sans-serif;
+        font-weight: bold;
+        font-size: 30pt;
+        position: absolute;
+        left: 90px; top: 10px; z-index: 400;
+    }
+
+    #title {
+        font-family: sans-serif;
+        font-weight: bolder;
+        font-size: 20pt;
+        position: absolute;
+        left: 90px;
+        top: 50px;z-index: 400;
+    }
+
+    #contact {
+        position: absolute;
+        top: 56px; z-index: 400;
+        right: 10px;
+    }
+
+    #contact a {
+        font-family: sans-serif;
+        font-weight: bolder;
+        font-size: 14pt;
+        color: black;
+        text-decoration: none;
+    }
+
+    #contact a:hover { cursor: pointer; }
+
+    #contact-dialog {
+        width: 50%;
+        position: absolute;
+        top: 10%; right: 10px; z-index: 400;
+        background-color: white;
+        border: 1px solid black;
+        border-radius: 5    px;
+        padding: 25px;
+        box-shadow: 10px 10px 5px grey;
+    }
+
+    #header {
+        background-color: white;
+        height: 90px;
+    }
+
+    button {
+        background-color: lightgray;
+        color: blue;
+        border: none;
+        font-size: 14px;
+        padding: 10px;
+    }
+
+</style>
+
+<div ng-controller="MetadataCtrl as ctrl"  class="controller">
+
+        <div id="logo">
+				<a href="http://www.nwfsc.noaa.gov" target="_blank"><IMG SRC="images/NOAA_logo.png" WIDTH="70" HEIGHT="70" BORDER=0 ALT="NOAA Logo"></a>
+            </div>
+            
+            <div ng-click="closeDialog()">
+                <div id="heading" >NWFSC/FRAM</div>
+                <div id="title">Data Warehouse - {{ layer }} Layer Metadata</div>
+                <div id="header"></div>
+            </div>
+
+    <div ng-hide="showLayer"><h1><b>Layer does not exist in sources (api/v1/source)</b></h1></div>
+
+    <table ng-show="showLayer" class="display" style="padding:10px" cellspacing="0" width="100%">
+		        <thead align="left">
+		            <tr class="metadataHeader">
+		                <th>Project&nbsp;&nbsp;&nbsp;</th>
+		                <th>Layer&nbsp;&nbsp;&nbsp;</th>
+	                    <th>Description&nbsp;&nbsp;&nbsp;</th>
+		                <th>Years of Data</th>
+                        <th>Point of Contact</th>
+		                <th>Updated&nbsp;&nbsp;&nbsp;</th>
+                        <th>Download Data</th>
+                  </tr>
+                </thead>
+		        <tbody>
+                    <tr>
+                        <td>
+                                {{project}}
+                        </td>
+                        <td>
+                                {{layer}}
+                        </td>
+                        <td>
+                            {{description}}
+                        </td>
+                        <td>
+                            {{yearsOfData}}
+                        </td>
+                        <td>
+                              {{pointOfContact}}
+                        </td>
+                        <td>
+                            {{lastUpdated}}
+                        </td>
+                        <td>
+                            <a href="{{csv_url}}" target="_blank">CSV</a>, <a href="{{json_url}}" target="_blank">JSON</a>
+                        </td>
+                    </tr>
+            </tbody>
+    </table>
+
+<table id="metadata" class="display" cellspacing="0" width="100%" />
+
+</div>

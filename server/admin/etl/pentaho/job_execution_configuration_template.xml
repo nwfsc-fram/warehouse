@@ -1,0 +1,35 @@
+<!-- A minimal job execution XML as created by Spoon 'Run'
+     with "Environment Type" set to 'Server'
+       See also:
+     https://github.com/pentaho/pentaho-kettle/blob/6.1/engine/src/org/pentaho/di/job/JobExecutionConfiguration.java
+-->
+<job_execution_configuration>
+    <exec_local>Y</exec_local>
+    <exec_remote>N</exec_remote>
+    <pass_export>Y</pass_export>
+    <parameters>
+    </parameters>
+    <variables>
+    <variable><name>Internal.Entry.Current.Directory</name><value></value></variable>
+    <variable><name>Internal.Job.Filename.Directory</name><value></value></variable>
+    <variable><name>Internal.Job.Filename.Name</name><value></value></variable>
+    <variable><name>Internal.Job.Name</name><value></value></variable>
+    <variable><name>Internal.Job.Repository.Directory</name><value></value></variable>
+    <variable><name>Internal.Job.Run.AttemptNr</name><value/></variable>
+    <variable><name>Internal.Job.Run.ID</name><value/></variable>
+    <variable><name>Internal.Transformation.Filename.Directory</name><value/></variable>
+    <variable><name>Internal.Transformation.Filename.Name</name><value/></variable>
+    <variable><name>Internal.Transformation.Name</name><value/></variable>
+    <variable><name>Internal.Transformation.Repository.Directory</name><value/></variable>
+    </variables>
+    <arguments>
+    </arguments>
+    <replay_date/>
+    <safe_mode>N</safe_mode>
+    <log_level>Basic</log_level>
+    <clear_log>Y</clear_log>
+    <start_copy_name/>
+    <start_copy_nr>0</start_copy_nr>
+    <gather_metrics>N</gather_metrics>
+    <expand_remote_job>N</expand_remote_job>
+</job_execution_configuration>

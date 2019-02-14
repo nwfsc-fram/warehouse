@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<title>EFHRC Catalog: Effort Data</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <script src="script/efh_catalog_page.js"></script>
+</head>
+
+<body>
+<img src="images/title.png" alt="Title" />
+<div id="header">
+<ul>
+	<li><a href="Overview2.html">Overview</a></li>
+	<li id="pl"><a href="PlatesCD.html">Substrate Maps</a></li>
+	<li id="pl"><a href="PlatesEF.html">Biogenic Maps</a></li>
+	<li id="pl"><a href="PlatesK.html">Effort Maps</a></li>
+	<li id="pl"><a href="Regulatory.html">MPA Maps</a></li>
+	<li id="dl"><a href="Habitat.html">Substrate Data</a></li>
+	<li id="dl"><a href="Bathy.html">Imagery Data</a></li>
+	<li id="dl"><a href="Biogenic.html">Biogenic Data</a></li>
+	<li id="selected"><a href="Effort.html">Effort Data</a></li>
+	<li id="dl"><a href="Synthesis.html">Synthesis Data</a></li>
+	<li id="ms"><a href="mapservice.html">Map Services</a></li>
+	<li id="md"><a href="metadata.html?catalog_row_number=456&d_type=2">Metadata</a></li>
+</ul>
+</div>
+<div id="content">
+<table border="0">
+<th>&nbsp;</th><th> Download All!</th>
+<tr>
+<td>Download All Data Below! Format = ArcGIS 10.0 map package (.mpk), use the Extract Map Package tool to unpack.</td>
+<td width="100" align="center"><a href="static/EFH_Downloads/AllData/Task2_FishingEffort_Layers4Publishing.mpk"><img src="images/ddata1.png" alt="download all data"/></a></td>
+<td>&nbsp;</tr>
+</tr>
+<tr>
+<td>Download All Data Below! Format = ArcGIS 9.X ZIP Archive (.zip), use a zip tool to unpack.</td>
+<td width="100" align="center"><a href="static/EFH_Downloads/AllData/Task2_FishingEffort_Layers4Publishing.zip"><img src="images/ddata1.png" alt="download all data"/></a></td>
+<td>&nbsp;</tr>
+</tr>
+</table>
+<br>
+<table border="0" id="datasets">
+<th>Ref. No.</th><th>Dataset</th><th>Originator</th><th>Effort</th><th>Metadata</th>
+    <script type="text/javascript">
+        //TODO: initialize page with loading message/prompt to enable JavaScript
+        // define function identifying an Effort Data row
+        function effort(catalog_item) {
+            // check if EFH Catalog item is an Effort item.
+            var first_effort_item = 457;
+            var last_effort_item = 475;
+            if (catalog_item.catalog_row_number > last_effort_item) {
+                return false;
+            }
+            if (catalog_item.catalog_row_number < first_effort_item) {
+                return false;
+            }
+            //must be an Effort item!
+            return true;
+        }
+        // define function describing what these table rows should say
+        function addRow (i, catalog_items, table) {
+          var dataset = catalog_items[i];
+          if (effort(dataset) == false) {
+              return; //skip to next item
+          }
+          var row = table.insertRow(-1); //add one new row, to the end
+          // add table data, to the new row
+          var cell_ref = row.insertCell(0);
+          cell_ref.innerHTML = dataset.catalog_ref_number
+          var cell_name = row.insertCell(1);
+          cell_name.innerHTML = dataset.site_name;
+          var cell_source = row.insertCell(2);
+          cell_source.innerHTML = dataset.habitat_source;
+          var cell_url = row.insertCell(3);
+          cell_url.innerHTML = '<a href="'+dataset.habitat_url+'"><img src="images/ddata1.png" alt="download data"/></a>';
+          var cell_metadata = row.insertCell(4);
+          cell_metadata.innerHTML = '<a href="metadata.html?catalog_row_number='+dataset.catalog_row_number+'&d_type=5"><img src="images/metadata1.png" alt="download metadata"/></a>';
+        }
+        // populate table
+        populate_catalog_item_table(addRow);
+    </script>
+</table>
+</div>
+</body>
+</html>
+

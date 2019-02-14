@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
+<html ng-app="tableApp" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Manage > Tables - NWFSC/FRAM Data Warehouse</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script src="angular/ControllerTableCopy.js"></script>
+    <!-- DataTables -->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+    <script src="script/table.js"></script>
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css">
+    <base href="/management/">
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  </head>
+  <body>
+    <h2>Data Warehouse Management</h2>
+    <a href="index.html">login</a> > Manage Tables
+    <div>
+      <h2>Tables</h2>
+      <table id="tables" class="display" cellspacing="0" width="100%">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Project</th>
+            <th>Type</th>
+            <th>Title</th>
+            <th>Data Years</th>
+            <th>Selectable</th>
+            <th>Sensitive</th>
+            <!--<th>CSW UUID</th>-->
+            <th>InPort Project ID</th>
+            <th>InPort Entity ID</th>
+          </tr>
+        </thead>
+      </table>
+
+      <p>
+        <div ng-controller="TableCopyFormController as cp">
+        <h3>Copy Table:</h3>
+        <form name="cp.copyForm" action="{{action}}" method="post" id="copy-table" novalidate class="simple-form">
+        Copy Table: <input type="text" name="table" ng-model="table"/> from Project: <input type="text" name="project" ng-model="project"/><br/>
+        New Table Name: <input type="text" name="name"/><br/>
+        New Project Name: <input type="text" name="project-name"/><br/>
+        </form>
+        Variable Custom Identifiers (JSON object, mapping existing custom ID to new custom IDs):<br/>
+        <textarea name="variable-custom-identifiers" form="copy-table" rows="3" cols="100">{}</textarea><br/>
+        <pre>e.g.: {"custom_variable_on_existing_table": "my_new_customized_variable_identifier",
+                    "another_custom_variable_on_table": "my_other_customized_variable_identifier"}</pre>
+        <input type="submit" form="copy-table" value="Create Copy" ng-click="submit()" formtarget="output"/>
+        </div>
+      </p>
+      
+      <p>
+        <h3>API Output:</h3>
+        <iframe	name="output" src="../api/v1/user" width="100%"/>
+      </p>
+    </div>
+  </body>
+</html>

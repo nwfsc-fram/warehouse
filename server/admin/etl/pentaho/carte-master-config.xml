@@ -1,0 +1,19 @@
+<!-- Carte server configuration template
+     per:
+     https://help.pentaho.com/Documentation/6.1/0L0/0Y0/060/060/010
+-->
+<slave_config>
+<!-- on a master server, the slaveserver node contains information about this Carte instance -->
+    <slaveserver>
+    <hostname></hostname>
+    <port></port>
+    <username></username>
+    <password></password>
+    <master>Y</master>
+    <sslConfig>
+        <keyStore></keyStore>
+        <keyStorePassword></keyStorePassword>
+        <keyPassword></keyPassword>
+    </sslConfig>
+    </slaveserver>
+</slave_config>

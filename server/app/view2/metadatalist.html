@@ -1,0 +1,94 @@
+<style>
+    #logo {
+        position: absolute;
+        left: 10px; top: 10px ;z-index: 400;  
+    }
+
+    #heading {
+        font-family: sans-serif;
+        font-weight: bold;
+        font-size: 30pt;
+        position: absolute;
+        left: 90px; top: 10px; z-index: 400;
+    }
+
+    #title {
+        font-family: sans-serif;
+        font-weight: bolder;
+        font-size: 20pt;
+        position: absolute;
+        left: 90px;
+        top: 50px;z-index: 400;
+    }
+
+    #contact {
+        position: absolute;
+        top: 56px; z-index: 400;
+        right: 10px;
+    }
+
+    #contact a {
+        font-family: sans-serif;
+        font-weight: bolder;
+        font-size: 14pt;
+        color: black;
+        text-decoration: none;
+    }
+
+    #contact a:hover {
+        cursor: pointer;
+    }
+
+    #contact-dialog {
+        width: 50%;
+        position: absolute;
+        top: 10%; right: 10px; z-index: 400;
+        background-color: white;
+        border: 1px solid black;
+        border-radius: 5    px;
+        padding: 25px;
+        box-shadow: 10px 10px 5px grey;
+    }
+
+    #header {
+        background-color: white;
+        height: 90px;
+    }
+
+    button {
+        background-color: lightgray;
+        color: blue;
+        border: none;
+        font-size: 14px;
+        padding: 10px;
+    }
+
+</style>
+
+<div ng-controller="MetadataListCtrl as ctrl" class="controller">
+
+			<div id="logo">
+				<a href="http://www.nwfsc.noaa.gov" target="_blank"><IMG SRC="images/NOAA_logo.png" WIDTH="70" HEIGHT="70" BORDER=0 ALT="NOAA Logo"></a>
+            </div>
+            
+            <div ng-click="closeDialog()">
+                <div id="heading" >NWFSC/FRAM</div>
+                <div id="title">Data Warehouse  - Layers Metadata</div>
+                <div id="header"></div>
+            </div>
+
+            <div id="contact" ng-click="displayDialog()"><a >contact us</a></div>
+
+            <div id="contact-dialog" ng-if="contactDisplay">
+                Please contact us with feedback, questions, and any requests that you might have regarding the FRAM Data Warehouse at the following email:<br><br>
+                <a href="mailto:nmfs.nwfsc.fram.data.team@noaa.gov" >nmfs.nwfsc.fram.data.team@noaa.gov</a><br><br>
+                You may also contact the FRAM Data Team lead directly at:<br><br>
+                Todd Hay<br>
+                NWFSC/FRAM<br>
+                <a href="mailto:todd.hay@noaa.gov" >todd.hay@noaa.gov</a><br>
+                206.302.2449
+                <button ng-click="closeDialog()" style="float: right">CLOSE</button>
+            </div>
+
+    <table id="metadatalist" class="display" cellspacing="0" width="100%" ng-click="closeDialog()">
+</div>

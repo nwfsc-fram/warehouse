@@ -1,0 +1,13 @@
+*~
+*__pycache__
+build/**
+/database/migration/trawl/stationdesign_geodatatransfer.ktr
+/database/migration/trawl/stationinventory_datatransfer.ktr
+/server/db_trawl.ini
+/server/db_wcgop.ini
+/server/db_config.ini
+/server/db_dwsupport.ini
+/server/admin/etl/pentaho/java/*.zip
+/server/api/auth/secrets/**
+/server/.eggs/**
+/server/Warehouse_API.egg-info/**
