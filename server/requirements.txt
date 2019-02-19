@@ -19,6 +19,7 @@ Markdown==2.6.8
 MarkupSafe==1.0
 numpy==1.11.3
 OWSLib==0.10.3
+openpyxl==2.6.0
 pandas==0.19.2
 path-and-address==2.0.1
 pkgconfig==1.2.2

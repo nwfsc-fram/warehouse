@@ -9,6 +9,8 @@ import io
 import codecs
 
 import falcon
+from openpyxl import Workbook
+from openpyxl.writer.excel import save_virtual_workbook
 
 import api.json as json
 from api.auth import auth
@@ -168,10 +170,13 @@ class Selection:
             resp.content_type = get_format_http_content_type( str_format_type)
             result_stream = format_result(result_generator, str_format_type)
             chunked_stream = streaming.biggerchunks_stream(result_stream, 4)#2(13.6),3(13),4(
-            encoding = 'utf-8'
-            if resp.content_type == 'text/csv':
-                encoding = 'utf-8-sig'
-            byte_stream = codecs.iterencode(chunked_stream, encoding)
+            if str_format_type == 'xlsx':
+                byte_stream = chunked_stream #already bytes
+            else:
+                encoding = 'utf-8'
+                if resp.content_type == 'text/csv':
+                    encoding = 'utf-8-sig'
+                byte_stream = codecs.iterencode(chunked_stream, encoding)
             resp.stream = byte_stream#content
 
 str_format_dict_function = 'function'
@@ -189,6 +194,8 @@ def get_format_http_content_type( str_format_type):
     'application/json'
     >>> get_format_http_content_type( 'csv')
     'text/csv'
+    >>> get_format_http_content_type('xlsx')
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     """
     str_type_lower_trimmed = str_format_type.strip().lower()
     for str_type_key in dict_format_dicts_by_type.keys():
@@ -359,6 +366,46 @@ def format_result_json(result_generator):
     string_stream = json.JSONEncoder(sort_keys=bool_sort_keys,iterable_as_array=True).iterencode(dict_generator)
     return string_stream
 
+def format_result_xlsx(result_generator):
+    """
+    Utility function, XLSX format a dataset Selection
+
+    Returns:
+    String generator -- formatted dataset selection
+
+    >>> def test_generator1():
+    ...     raise StopIteration()
+    ...     yield False #impossible
+    >>> out = format_result_xlsx(test_generator1())
+    >>> '__iter__' in dir(out)#check if iterable
+    True
+    >>> len(b''.join(out))#consume iterator & concat returned strings
+    4956
+    >>> def test_generator2():
+    ...     yield ('foo', 'bar', 'data')
+    ...     yield (1, 2, 42)
+    >>> out = format_result_xlsx(test_generator2())
+    >>> '__iter__' in dir(out)#check if iterable
+    True
+    >>> len(b''.join(out))#consume iterator & concat returned strings
+    4957
+    >>> def test_generator3():
+    ...     yield ('a', 'z', 'b')
+    ...     yield (1, 26, 2)
+    ...     yield (3, 28, 4)
+    >>> out = format_result_xlsx(test_generator3())
+    >>> '__iter__' in dir(out)#check if iterable
+    True
+    >>> len(b''.join(out))#consume iterator & concat returned strings
+    4958
+    """
+    string_stream_output = io.StringIO()
+    workbook = Workbook()
+    data_sheet = workbook.active
+    data_sheet.title = "data"
+    description_sheet = workbook.create_sheet("description")
+    yield save_virtual_workbook(workbook)
+
 def json_generator(tuple_header, row_generator):
     """
     #TODO: document
@@ -377,6 +424,8 @@ dict_format_dicts_by_type = {
              , str_format_dict_http_content: 'application/json'}
     ,'csv' : { str_format_dict_function: format_result_csv
              , str_format_dict_http_content: 'text/csv'}
+    ,'xlsx': { str_format_dict_function: format_result_xlsx
+              ,str_format_dict_http_content: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}
 }
 #Dictionary, mapping format IDs to dicts that represent format details
 
