@@ -373,31 +373,38 @@ def format_result_xlsx(result_generator):
     Returns:
     String generator -- formatted dataset selection
 
+    >>> from openpyxl import load_workbook
     >>> def test_generator1():
     ...     raise StopIteration()
     ...     yield False #impossible
     >>> out = format_result_xlsx(test_generator1())
     >>> '__iter__' in dir(out)#check if iterable
     True
-    >>> len(b''.join(out))#consume iterator & concat returned strings
-    4977
+    >>> xlsx_stream = io.BytesIO(b''.join(out))#consume iterator
+    >>> empty = load_workbook(xlsx_stream, read_only=True)
+    >>> all(tab in empty for tab in ['data', 'description'])
+    True
+    >>> empty['data'].max_column, empty['data'].max_row
+    (1, 1)
     >>> def test_generator2():
     ...     yield ('foo', 'bar', 'data')
     ...     yield (1, 2, 42)
     >>> out = format_result_xlsx(test_generator2())
     >>> '__iter__' in dir(out)#check if iterable
     True
-    >>> len(b''.join(out))#consume iterator & concat returned strings
-    5061
+    >>> xlsx_stream = io.BytesIO(b''.join(out))#consume iterator
+    >>> two_row = load_workbook(xlsx_stream, read_only=True)
+    >>> two_row['data'].max_column, two_row['data'].max_row
+    (3, 2)
     >>> def test_generator3():
     ...     yield ('a', 'z', 'b')
     ...     yield (1, 26, 2)
     ...     yield (3, 28, 4)
     >>> out = format_result_xlsx(test_generator3())
-    >>> '__iter__' in dir(out)#check if iterable
-    True
-    >>> len(b''.join(out))#consume iterator & concat returned strings
-    5061
+    >>> xlsx_stream = io.BytesIO(b''.join(out))#consume iterator
+    >>> three = load_workbook(xlsx_stream, read_only=True)
+    >>> three['data'].max_column, three['data'].max_row
+    (3, 3)
     """
     bool_sort_keys=True
 
