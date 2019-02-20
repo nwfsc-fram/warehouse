@@ -403,8 +403,9 @@ def format_result_xlsx(result_generator):
     >>> out = format_result_xlsx(test_generator3())
     >>> xlsx_stream = io.BytesIO(b''.join(out))#consume iterator
     >>> three = load_workbook(xlsx_stream, read_only=True)
-    >>> three['data'].max_column, three['data'].max_row
-    (3, 3)
+    >>> # check data & column order
+    >>> [[cell.value for cell in row] for row in three['data'].rows]
+    [['a', 'b', 'z'], [1, 2, 26], [3, 4, 28]]
     """
     bool_sort_keys=True
 
