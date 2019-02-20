@@ -380,7 +380,7 @@ def format_result_xlsx(result_generator):
     >>> '__iter__' in dir(out)#check if iterable
     True
     >>> len(b''.join(out))#consume iterator & concat returned strings
-    4956
+    4977
     >>> def test_generator2():
     ...     yield ('foo', 'bar', 'data')
     ...     yield (1, 2, 42)
@@ -388,7 +388,7 @@ def format_result_xlsx(result_generator):
     >>> '__iter__' in dir(out)#check if iterable
     True
     >>> len(b''.join(out))#consume iterator & concat returned strings
-    4957
+    5061
     >>> def test_generator3():
     ...     yield ('a', 'z', 'b')
     ...     yield (1, 26, 2)
@@ -397,14 +397,41 @@ def format_result_xlsx(result_generator):
     >>> '__iter__' in dir(out)#check if iterable
     True
     >>> len(b''.join(out))#consume iterator & concat returned strings
-    4958
+    5061
     """
-    string_stream_output = io.StringIO()
+    bool_sort_keys=True
+
     workbook = Workbook()
     data_sheet = workbook.active
     data_sheet.title = "data"
     description_sheet = workbook.create_sheet("description")
-    yield save_virtual_workbook(workbook)
+    # TODO: add description metadata
+
+    # extract the first set (header row) from the list of sets& write to sheet
+    try:
+        tuple_header_unsorted = next(result_generator)
+        list_header = list(tuple_header_unsorted)
+        if bool_sort_keys:
+            list_header.sort()
+        data_sheet.append(list_header) #add header row
+    except StopIteration: #No results! No formatting needed
+        yield save_virtual_workbook(workbook)
+        raise StopIteration()
+    # convert the list of remaining sets to dicts, and write to buffer
+    try:
+        while True:
+            set_row = next(result_generator)
+            # build a dict; representing rows values by openpyxl column number
+            dict_row = {}
+            # add each element of the set to dict,
+            for index_header, str_header in enumerate(tuple_header_unsorted):
+                # find which column (starting from 1) heading was used in header row
+                workbook_index = list_header.index(str_header)+1
+                dict_row[workbook_index] = set_row[index_header]
+            data_sheet.append(dict_row)
+    except StopIteration:
+        yield save_virtual_workbook(workbook)
+        raise StopIteration()
 
 def json_generator(tuple_header, row_generator):
     """
