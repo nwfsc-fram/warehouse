@@ -7,6 +7,8 @@ Copyright (C) 2015-2017 ERT Inc.
 import csv
 import io
 import codecs
+from datetime import datetime
+import pytz
 
 import falcon
 import xlsxwriter
@@ -140,6 +142,7 @@ class Selection:
                     ,param_name=parameters.ReservedParameterNames.empty_cells
                 ) from err
             # retrieve data
+            start_time = datetime.now(pytz.timezone('US/Pacific'))
             try:
                 result_generator = data.get_data(str_dataset_id
                                             ,list_requested_variables
@@ -167,7 +170,10 @@ class Selection:
                 ) from error
             str_format_type = get_requested_format_type( kwargs)
             resp.content_type = get_format_http_content_type( str_format_type)
-            result_stream = format_result(result_generator, str_format_type)
+            for data_source in sources:
+                if data_source['id'] == str_dataset_id:
+                    result_stream = format_result(result_generator, str_format_type, data_source, request, start_time)
+                    break
             chunked_stream = streaming.biggerchunks_stream(result_stream, 4)#2(13.6),3(13),4(
             if str_format_type == 'xlsx':
                 byte_stream = chunked_stream #already bytes
@@ -206,21 +212,33 @@ def get_format_http_content_type( str_format_type):
         raise falcon.HTTPNotFound(description= "Unrecognized format type: "
                                                + str_response_format_type)
 
-def format_result(list_result, str_response_format_type='json'):
+def format_result(list_result, str_response_format_type, source, request, start_time):
     """
     Utility function, format a dataset Selection Falcon request
+
+    Returns String generator, representing the formatted dataset selection
+
+    Keyword Parameters:
+    list_result  -- Generator yielding a tuple representing data field
+      names, followed by additional tuples representing data rows
+    str_response_format_type  -- String, representing the output format
+    source  -- Dict, representing the data source result was retrieved from
+    request  -- Falcon Request object representing this HTTP request
+    start_time  -- datetime representing the time result was retrieved
 
     Exceptions:
     falcon.error.HTTPNotFound -- raised when referenced format type is
         unrecognized.
-    
-    Returns:
-    String generator -- formatted dataset selection
 
+    >>> from unittest.mock import Mock
+    >>> data_source = {'id': 'my.fake', 'description': 'Great data'}
+    >>> fake_req = Mock()
+    >>> fake_req.uri = 'https://example.domain/api/v1/source/my.fake/selection.json'
+    >>> time = datetime.now()
     >>> def test_generator1():
     ...     raise StopIteration()
     ...     yield False #impossible
-    >>> out = format_result(test_generator1())
+    >>> out = format_result(test_generator1(), 'json', data_source, fake_req, time)
     >>> '__iter__' in dir(out)#check if iterable
     True
     >>> ''.join(out)#consume iterator & concat returned strings
@@ -228,7 +246,7 @@ def format_result(list_result, str_response_format_type='json'):
     >>> def test_generator2():
     ...     yield ('foo', 'bar', 'data')
     ...     yield (1, 2, 42)
-    >>> out = format_result(test_generator2())
+    >>> out = format_result(test_generator2(), 'json', data_source, fake_req, time)
     >>> '__iter__' in dir(out)#check if iterable
     True
     >>> ''.join(out)#consume iterator & concat returned strings
@@ -237,13 +255,12 @@ def format_result(list_result, str_response_format_type='json'):
     ...     yield ('a', 'z', 'b')
     ...     yield (1, 26, 2)
     ...     yield (3, 28, 4)
-    >>> out = format_result(test_generator3())
+    >>> out = format_result(test_generator3(), 'json', data_source, fake_req, time)
     >>> '__iter__' in dir(out)#check if iterable
     True
     >>> ''.join(out)#consume iterator & concat returned strings
     '[{"a": 1, "b": 2, "z": 26}, {"a": 3, "b": 4, "z": 28}]'
     """
-    #TODO: implement additional output formats
     try:
         str_type_lower_trimmed = str_response_format_type.strip().lower()
         # get the dict, which contains our formatting function
@@ -251,39 +268,50 @@ def format_result(list_result, str_response_format_type='json'):
     except KeyError as e:
         raise falcon.HTTPNotFound(description= "Unrecognized format type: "
                                                + str_response_format_type)
+    description = source['description']
+    url = request.uri
     # retrieve the formatting function, from the dict
     function_format = dict_format[str_format_dict_function]
-    return function_format(list_result)
+    return function_format(list_result, description, url, start_time)
 
-def format_result_csv(result_generator):
+def format_result_csv(result_generator, description, url, time):
     """
     Utility function, CSV format a dataset Selection
+
+    Keyword Parameters:
+    result_generator  -- Generator yielding a header tuple & tuples of data
+    description  -- String, representing the data source's description
+    url  -- String representing url used for this selection request
+    time  -- Datetime representing time result was retrieved
 
     Returns:
     String generator -- formatted dataset selection
 
+    >>> test_desc = "Great data"
+    >>> test_url = "https://example.domain/api/v1/source/my.data/selection.csv"
+    >>> test_time = datetime.now(pytz.timezone('US/Pacific'))
     >>> def test_generator1():
     ...     raise StopIteration()
     ...     yield False #impossible
-    >>> out = format_result_csv(test_generator1())
+    >>> out = format_result_csv(test_generator1(), test_desc, test_url, test_time)
     >>> ''.join(out)#consume iterator & concat returned strings
     '\\r\\n'
     >>> def test_generator2():
     ...     yield ('foo', 'bar', 'data')
     ...     yield (1, 2, 42)
-    >>> out = format_result_csv(test_generator2())
+    >>> out = format_result_csv(test_generator2(), test_desc, test_url, test_time)
     >>> ''.join(out)#consume iterator & concat returned strings
     '"bar","data","foo"\\r\\n"2","42","1"\\r\\n'
     >>> def test_generator3():
     ...     yield ('a', 'z', 'b')
     ...     yield (1, 26, 2)
     ...     yield (3, 28, 4)
-    >>> out = format_result_csv(test_generator3())
+    >>> out = format_result_csv(test_generator3(), test_desc, test_url, test_time)
     >>> ''.join(out)#consume iterator & concat returned strings
     '"a","b","z"\\r\\n"1","2","26"\\r\\n"3","4","28"\\r\\n'
     >>> def test_generator4():
     ...     yield ('foo', 'bar', 'data')
-    >>> out = format_result_csv(test_generator4())
+    >>> out = format_result_csv(test_generator4(), test_desc, test_url, test_time)
     >>> ''.join(out)#consume iterator & concat returned strings
     '"bar","data","foo"\\r\\n'
     """
@@ -319,17 +347,26 @@ def format_result_csv(result_generator):
         writer.writerow(dict_row)
         yield string_stream_output.getvalue()
 
-def format_result_json(result_generator):
+def format_result_json(result_generator, description, url, time):
     """
     Utility function, JSON format a dataset Selection
+
+    Keyword Parameters:
+    result_generator  -- Generator yielding a header tuple & tuples of data
+    description  -- String, representing the data source's description
+    url  -- String representing url used for this selection request
+    time  -- Datetime representing time result was retrieved
 
     Returns:
     String generator -- formatted dataset selection
 
+    >>> test_desc = "Great data"
+    >>> test_url = "https://example.domain/api/v1/source/my.data/selection.json"
+    >>> test_time = datetime.now(pytz.timezone('US/Pacific'))
     >>> def test_generator1():
     ...     raise StopIteration()
     ...     yield False #impossible
-    >>> out = format_result_json(test_generator1())
+    >>> out = format_result_json(test_generator1(), test_desc, test_url, test_time)
     >>> '__iter__' in dir(out)#check if iterable
     True
     >>> ''.join(out)#consume iterator & concat returned strings
@@ -337,7 +374,7 @@ def format_result_json(result_generator):
     >>> def test_generator2():
     ...     yield ('foo', 'bar', 'data')
     ...     yield (1, 2, 42)
-    >>> out = format_result_json(test_generator2())
+    >>> out = format_result_json(test_generator2(), test_desc, test_url, test_time)
     >>> '__iter__' in dir(out)#check if iterable
     True
     >>> ''.join(out)#consume iterator & concat returned strings
@@ -346,7 +383,7 @@ def format_result_json(result_generator):
     ...     yield ('a', 'z', 'b')
     ...     yield (1, 26, 2)
     ...     yield (3, 28, 4)
-    >>> out = format_result_json(test_generator3())
+    >>> out = format_result_json(test_generator3(), test_desc, test_url, test_time)
     >>> '__iter__' in dir(out)#check if iterable
     True
     >>> ''.join(out)#consume iterator & concat returned strings
@@ -365,18 +402,27 @@ def format_result_json(result_generator):
     string_stream = json.JSONEncoder(sort_keys=bool_sort_keys,iterable_as_array=True).iterencode(dict_generator)
     return string_stream
 
-def format_result_xlsx(result_generator):
+def format_result_xlsx(result_generator, description, url, time):
     """
     Utility function, XLSX format a dataset Selection
+
+    Keyword Parameters:
+    result_generator  -- Generator yielding a header tuple & tuples of data
+    description  -- String, representing the data source's description
+    url  -- String representing url used for this selection request
+    time  -- Datetime representing time result was retrieved
 
     Returns:
     String generator -- formatted dataset selection
 
     >>> from openpyxl import load_workbook
+    >>> test_desc = "Great data"
+    >>> test_url = "https://example.domain/api/v1/source/my.data/selection.xlsx"
+    >>> test_time = datetime.now(pytz.timezone('US/Pacific'))
     >>> def test_generator1():
     ...     raise StopIteration()
     ...     yield False #impossible
-    >>> out = format_result_xlsx(test_generator1())
+    >>> out = format_result_xlsx(test_generator1(), test_desc, test_url, test_time)
     >>> '__iter__' in dir(out)#check if iterable
     True
     >>> xlsx_stream = io.BytesIO(b''.join(out))#consume iterator
@@ -388,7 +434,7 @@ def format_result_xlsx(result_generator):
     >>> def test_generator2():
     ...     yield ('foo', 'bar', 'data')
     ...     yield (1, 2, 42)
-    >>> out = format_result_xlsx(test_generator2())
+    >>> out = format_result_xlsx(test_generator2(), test_desc, test_url, test_time)
     >>> '__iter__' in dir(out)#check if iterable
     True
     >>> xlsx_stream = io.BytesIO(b''.join(out))#consume iterator
@@ -399,7 +445,7 @@ def format_result_xlsx(result_generator):
     ...     yield ('a', 'z', 'b')
     ...     yield (1, 26, 2)
     ...     yield (3, 28, 4)
-    >>> out = format_result_xlsx(test_generator3())
+    >>> out = format_result_xlsx(test_generator3(), test_desc, test_url, test_time)
     >>> xlsx_stream = io.BytesIO(b''.join(out))#consume iterator
     >>> three = load_workbook(xlsx_stream, read_only=True)
     >>> # check data & column order
@@ -413,8 +459,13 @@ def format_result_xlsx(result_generator):
     workbook = xlsxwriter.Workbook(write_stream)
     description_sheet = workbook.add_worksheet("description")
     cell = "A2" #first column, second row
-    options = {'x_offset': 15, 'y_offset': 12}
-    content = "Hello World!\nThis is Great"#TODO: implement
+    options = {'x_offset': 15,
+               'y_offset': 12,
+               'width': 680,
+               'height': 700}
+    template = "Description:\n{}\n\nURL: {}\nRetrieved: {}"
+    time_string = time.strftime("%B %-d, %Y %-I:%M:%S %p %Z")
+    content = template.format(description, url, time_string)
     description_sheet.insert_textbox(cell, content, options)
 
     # write data
