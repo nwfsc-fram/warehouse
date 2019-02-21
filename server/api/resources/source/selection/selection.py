@@ -9,8 +9,7 @@ import io
 import codecs
 
 import falcon
-from openpyxl import Workbook
-from openpyxl.writer.excel import save_virtual_workbook
+import xlsxwriter
 
 import api.json as json
 from api.auth import auth
@@ -409,36 +408,46 @@ def format_result_xlsx(result_generator):
     """
     bool_sort_keys=True
 
-    workbook = Workbook()
-    data_sheet = workbook.active
-    data_sheet.title = "data"
-    description_sheet = workbook.create_sheet("description")
-    # TODO: add description metadata
+    # write Description tab to buffer
+    write_stream = io.BytesIO()
+    workbook = xlsxwriter.Workbook(write_stream)
+    description_sheet = workbook.add_worksheet("description")
+    cell = "A2" #first column, second row
+    options = {'x_offset': 15, 'y_offset': 12}
+    content = "Hello World!\nThis is Great"#TODO: implement
+    description_sheet.insert_textbox(cell, content, options)
 
+    # write data
+    data_sheet = workbook.add_worksheet("data")
     # extract the first set (header row) from the list of sets& write to sheet
     try:
         tuple_header_unsorted = next(result_generator)
         list_header = list(tuple_header_unsorted)
         if bool_sort_keys:
             list_header.sort()
-        data_sheet.append(list_header) #add header row
+        #add header row
+        header_row_index = 0 #first row
+        for column_index, value in enumerate(list_header):
+            data_sheet.write(header_row_index, column_index, value)
     except StopIteration: #No results! No formatting needed
-        yield save_virtual_workbook(workbook)
+        workbook.close()
+        yield write_stream.getvalue()
         raise StopIteration()
-    # convert the list of remaining sets to dicts, and write to buffer
+    # write list of remaining sets to buffer
     try:
+        worksheet_row_index = 0 #header row has already been written
         while True:
             set_row = next(result_generator)
-            # build a dict; representing rows values by openpyxl column number
-            dict_row = {}
-            # add each element of the set to dict,
+            worksheet_row_index += 1
+            # identify how header row column may differ from data row
             for index_header, str_header in enumerate(tuple_header_unsorted):
-                # find which column (starting from 1) heading was used in header row
-                workbook_index = list_header.index(str_header)+1
-                dict_row[workbook_index] = set_row[index_header]
-            data_sheet.append(dict_row)
+                # find what position this column heading has in header row
+                column_index = list_header.index(str_header)
+                cell_value = set_row[index_header]
+                data_sheet.write(worksheet_row_index, column_index, cell_value)
     except StopIteration:
-        yield save_virtual_workbook(workbook)
+        workbook.close()
+        yield write_stream.getvalue()
         raise StopIteration()
 
 def json_generator(tuple_header, row_generator):
