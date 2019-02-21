@@ -1,7 +1,7 @@
 """
 Module for classes providing a Metadata RESTful endpoint for Warehouse datasets
 
-Copyright (C) 2015-2017 ERT Inc.
+Copyright (C) 2015-2017, 2019 ERT Inc.
 """
 import string
 
@@ -99,7 +99,9 @@ class SourceUtil(ResourceUtil):
          'links': [{'href': 'https://Great.host/warehouse/api/v1/source/warehouse.catch_fact/selection.json',
                     'rel': 'json-selection'},
                    {'href': 'https://Great.host/warehouse/api/v1/source/warehouse.catch_fact/selection.csv',
-                    'rel': 'csv-selection'}],
+                    'rel': 'csv-selection'},
+                   {'href': 'https://Great.host/warehouse/api/v1/source/warehouse.catch_fact/selection.xlsx',
+                    'rel': 'xlsx-selection'}],
          'name': 'catch_fact',
          'project': 'warehouse',
          'rows': 99,
@@ -281,7 +283,9 @@ class SourceUtil(ResourceUtil):
         [{'href': 'http://test.domain/api/v1/source/proj1.set1/selection.json',
           'rel': 'json-selection'},
          {'href': 'http://test.domain/api/v1/source/proj1.set1/selection.csv',
-          'rel': 'csv-selection'}]
+          'rel': 'csv-selection'},
+         {'href': 'http://test.domain/api/v1/source/proj1.set1/selection.xlsx',
+          'rel': 'xlsx-selection'}]
         """
         # Find the base URL where the API is being operated from
         base_url = self.get_base_url(source_url)
@@ -293,6 +297,9 @@ class SourceUtil(ResourceUtil):
                  base_url, source_api_id)}
             ,{'rel': 'csv-selection'
               ,'href': '{}/{}/selection.csv'.format(
+                  base_url, source_api_id)}
+            ,{'rel': 'xlsx-selection'
+              ,'href': '{}/{}/selection.xlsx'.format(
                   base_url, source_api_id)}
         ]
         return hateos_links
