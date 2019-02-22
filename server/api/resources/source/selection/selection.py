@@ -193,9 +193,7 @@ class FormatUtil:
     >>> FormatUtil.get_http_content_type('csv')
     'text/csv'
     >>> # Check formats
-    >>> formats = list(FormatUtil.format_dicts_by_type)
-    >>> formats.sort()
-    >>> formats
+    >>> FormatUtil.get_format_ids()
     ['csv', 'json', 'xlsx']
     >>> # Example usage 2 -- format() method
     >>> from unittest.mock import Mock
@@ -248,6 +246,18 @@ class FormatUtil:
         self.data_source = data_source
         self.request = request
         self.start_time = start_time
+
+    @classmethod
+    def get_format_ids(cls):
+        """
+        Return list of sorted string format names
+
+        >>> FormatUtil.get_format_ids()
+        ['csv', 'json', 'xlsx']
+        """
+        formats = list(cls.format_dicts_by_type)
+        formats.sort()
+        return formats
 
     def format(self, results):
         """
