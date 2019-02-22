@@ -40,7 +40,7 @@ def get_engine_from_config(api_config_file_name):
         db_config['sqlalchemy.url'] = str(db_url)
     except TypeError as e:
         exception = ConfigPasswordCiphertextError(api_config_file_name, e)
-        logging.error(exception, stack_info=True)
+        logging.info(exception, exc_info=True)
     # instantiate engine from config
     engine = sqlalchemy.engine_from_config(db_config)
     return engine

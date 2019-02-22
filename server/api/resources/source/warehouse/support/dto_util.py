@@ -213,7 +213,7 @@ def get_roles( associations):
                 bad = table_association
                 unparseable_role_associations.append( bad)
                 msg = "unable to determine Role name for association: {}"
-                logging.error( DimensionRoleError(msg.format(bad)))
+                logging.info(DimensionRoleError(msg.format(bad)), exc_info=True)
                 continue #skip further processing of the association
             # make new name for role, using the prefix
             role_name = role_prefix + parent_table

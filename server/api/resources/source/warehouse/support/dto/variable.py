@@ -213,7 +213,7 @@ def get_by_lookup(table_names, db_url=None, connection_func=None):
                     python_type = variable_python_type.get_by_lookup( table, column
                                                     ,db_url, connection_func)
                 except variable_python_type.LookupNullType as e:
-                    logging.error( e)
+                    logging.info(e, exc_info=True)
                     continue #skip this table field
                 variable = {'table': table,'column': column
                             ,'title': None, 'description': None

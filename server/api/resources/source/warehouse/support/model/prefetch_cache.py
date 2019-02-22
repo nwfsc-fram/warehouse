@@ -142,7 +142,7 @@ class Controller():
         try:
             self._cache_data()
         except Exception as e:
-            self.logger.error(e)
+            self.logger.info(e, exc_info=True)
         # assign a new task to the module-level thread variable
         self._update_thread = threading.Timer(self._poll_interval_seconds
                                         ,self._fetch_and_schedule_update)

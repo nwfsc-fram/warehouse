@@ -70,7 +70,7 @@ class Variables:
                 dwsupport_variables = get_list_of_variables( str_dataset_id)
             except NotImplementedError as e:
                 #error; not a warehouse request & Dataset does not match requested ID
-                logging.error( e)
+                logging.exception(e)
                 raise falcon.HTTPError(falcon.HTTP_NOT_IMPLEMENTED, 'Not Implemented', str(e))
             # format the DWSupport info, for publishing
             tables, associations = model['tables'], model['associations']

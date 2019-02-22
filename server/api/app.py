@@ -156,7 +156,7 @@ def wrap_app_with_session_middleware(wsgi_app):
         engine.execute(cleanup_sql, [delete_older_than_modifier])
     except Exception as e:
         # but dont worry, cleanup will be retried next time WSGI app launches
-        logger.error(e)
+        logger.info(e, exc_info=True)
         # ignore error, & continue
     # install the session middleware!
     return SessionMiddleware(wsgi_app, session_opts)
@@ -176,9 +176,9 @@ def start_etl_scheduler():
         pentaho_started = True
     except TypeError as e:
         startup_exception = Exception('Failed to start Carte etl-scheduler', e) #TODO: define custom class
-        logging.warning(startup_exception, stack_info=True)
+        logging.warning(startup_exception, exc_info=True)
     except pentaho.CarteControllerTempdirPrefixStarted as e:
-        logging.warning(e, stack_info=True)
+        logging.warning(e, exc_info=True)
 
 def get_uri_template(resource_path):
     """
