@@ -169,10 +169,11 @@ class Selection:
                                   " not authorized").format(str_dataset_id)
                 ) from error
             str_format_type = get_requested_format_type( kwargs)
-            resp.content_type = get_format_http_content_type( str_format_type)
+            resp.content_type = FormatUtil.get_http_content_type(str_format_type)
             for data_source in sources:
                 if data_source['id'] == str_dataset_id:
-                    result_stream = format_result(result_generator, str_format_type, data_source, request, start_time)
+                    formatter = FormatUtil(str_format_type, data_source, request, start_time)
+                    result_stream = formatter.format(result_generator)
                     break
             chunked_stream = streaming.biggerchunks_stream(result_stream, 4)#2(13.6),3(13),4(
             if str_format_type == 'xlsx':
@@ -184,326 +185,381 @@ class Selection:
                 byte_stream = codecs.iterencode(chunked_stream, encoding)
             resp.stream = byte_stream#content
 
-str_format_dict_function = 'function'
-#String dict key, for storing references to formatter functions in Format dicts
-str_format_dict_http_content = 'content-type'
-#String key, for storing Strings representing HTTP Content-Type in Format dicts
-
-def get_format_http_content_type( str_format_type):
+class FormatUtil:
     """
-    Utility function, convert URI type id into HTTP Content-Type header value
+    Class encapsulating selection formatting functions
 
-    >>> get_format_http_content_type( 'json')
-    'application/json'
-    >>> get_format_http_content_type( 'Json')
-    'application/json'
-    >>> get_format_http_content_type( 'csv')
+    >>> # Example usage 1
+    >>> FormatUtil.get_http_content_type('csv')
     'text/csv'
-    >>> get_format_http_content_type('xlsx')
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    """
-    str_type_lower_trimmed = str_format_type.strip().lower()
-    for str_type_key in dict_format_dicts_by_type.keys():
-        if str_type_key == str_type_lower_trimmed:
-            dict_format = dict_format_dicts_by_type[str_type_key]
-            str_http_content_type = dict_format[str_format_dict_http_content]
-            return str_http_content_type
-    else:
-        raise falcon.HTTPNotFound(description= "Unrecognized format type: "
-                                               + str_response_format_type)
-
-def format_result(list_result, str_response_format_type, source, request, start_time):
-    """
-    Utility function, format a dataset Selection Falcon request
-
-    Returns String generator, representing the formatted dataset selection
-
-    Keyword Parameters:
-    list_result  -- Generator yielding a tuple representing data field
-      names, followed by additional tuples representing data rows
-    str_response_format_type  -- String, representing the output format
-    source  -- Dict, representing the data source result was retrieved from
-    request  -- Falcon Request object representing this HTTP request
-    start_time  -- datetime representing the time result was retrieved
-
-    Exceptions:
-    falcon.error.HTTPNotFound -- raised when referenced format type is
-        unrecognized.
-
+    >>> # Check formats
+    >>> formats = list(FormatUtil.format_dicts_by_type)
+    >>> formats.sort()
+    >>> formats
+    ['csv', 'json', 'xlsx']
+    >>> # Example usage 2 -- format() method
     >>> from unittest.mock import Mock
     >>> data_source = {'id': 'my.fake', 'description': 'Great data'}
     >>> fake_req = Mock()
     >>> fake_req.uri = 'https://example.domain/api/v1/source/my.fake/selection.json'
     >>> time = datetime.now()
-    >>> def test_generator1():
-    ...     raise StopIteration()
-    ...     yield False #impossible
-    >>> out = format_result(test_generator1(), 'json', data_source, fake_req, time)
-    >>> '__iter__' in dir(out)#check if iterable
-    True
-    >>> ''.join(out)#consume iterator & concat returned strings
-    '[]'
-    >>> def test_generator2():
+    >>> def test_results_generator():
     ...     yield ('foo', 'bar', 'data')
     ...     yield (1, 2, 42)
-    >>> out = format_result(test_generator2(), 'json', data_source, fake_req, time)
-    >>> '__iter__' in dir(out)#check if iterable
-    True
-    >>> ''.join(out)#consume iterator & concat returned strings
+    >>> formatter = FormatUtil('json', data_source, fake_req, time)
+    >>> output = formatter.format(test_results_generator())
+    >>> ''.join(output)#consume iterator & concat returned strings
     '[{"bar": 2, "data": 42, "foo": 1}]'
-    >>> def test_generator3():
-    ...     yield ('a', 'z', 'b')
-    ...     yield (1, 26, 2)
-    ...     yield (3, 28, 4)
-    >>> out = format_result(test_generator3(), 'json', data_source, fake_req, time)
-    >>> '__iter__' in dir(out)#check if iterable
-    True
-    >>> ''.join(out)#consume iterator & concat returned strings
-    '[{"a": 1, "b": 2, "z": 26}, {"a": 3, "b": 4, "z": 28}]'
     """
-    try:
-        str_type_lower_trimmed = str_response_format_type.strip().lower()
-        # get the dict, which contains our formatting function
-        dict_format = dict_format_dicts_by_type[str_type_lower_trimmed]
-    except KeyError as e:
-        raise falcon.HTTPNotFound(description= "Unrecognized format type: "
-                                               + str_response_format_type)
-    description = source['description']
-    url = request.uri
-    # retrieve the formatting function, from the dict
-    function_format = dict_format[str_format_dict_function]
-    return function_format(list_result, description, url, start_time)
+    def __init__(self, format_id, data_source, request, start_time):
+        """
+        Keyword Parameters:
+        format_id  -- String, identifying the the output format
+        data_source  -- Dict, representing the data source result was retrieved from
+        request  -- Falcon Request object representing this HTTP request
+        start_time  -- datetime representing the time result was retrieved
 
-def format_result_csv(result_generator, description, url, time):
-    """
-    Utility function, CSV format a dataset Selection
+        Exceptions:
+        falcon.error.HTTPNotFound -- raised when referenced format type is
+            unrecognized.
 
-    Keyword Parameters:
-    result_generator  -- Generator yielding a header tuple & tuples of data
-    description  -- String, representing the data source's description
-    url  -- String representing url used for this selection request
-    time  -- Datetime representing time result was retrieved
+        >>> from unittest.mock import Mock
+        >>> data_source = {'id': 'my.fake', 'description': 'Great data'}
+        >>> fake_req = Mock()
+        >>> fake_req.uri = 'https://example.domain/api/v1/source/my.fake/selection.json'
+        >>> time = datetime.now()
+        >>> formatter = FormatUtil('json', data_source, fake_req, time)
+        >>> formatter.data_source
+        {'id': 'my.fake', 'description': 'Great data'}
+        >>> FormatUtil('fizzbuzz', data_source, fake_req, time)
+        Traceback (most recent call last):
+          ...
+        falcon.errors.HTTPNotFound
+        """
+        self.format_id = format_id
+        try:
+            lower_trimmed_id = format_id.strip().lower()
+            # get the dict, which contains our formatting function
+            format_info = self.format_dicts_by_type[lower_trimmed_id]
+        except KeyError as e:
+            raise falcon.HTTPNotFound(description= "Unrecognized format type: "
+                                                   + format_id)
+        self.format_info = format_info
+        self.data_source = data_source
+        self.request = request
+        self.start_time = start_time
 
-    Returns:
-    String generator -- formatted dataset selection
+    def format(self, results):
+        """
+        Return String generator, yielding formatted dataset selection
 
-    >>> test_desc = "Great data"
-    >>> test_url = "https://example.domain/api/v1/source/my.data/selection.csv"
-    >>> test_time = datetime.now(pytz.timezone('US/Pacific'))
-    >>> def test_generator1():
-    ...     raise StopIteration()
-    ...     yield False #impossible
-    >>> out = format_result_csv(test_generator1(), test_desc, test_url, test_time)
-    >>> ''.join(out)#consume iterator & concat returned strings
-    '\\r\\n'
-    >>> def test_generator2():
-    ...     yield ('foo', 'bar', 'data')
-    ...     yield (1, 2, 42)
-    >>> out = format_result_csv(test_generator2(), test_desc, test_url, test_time)
-    >>> ''.join(out)#consume iterator & concat returned strings
-    '"bar","data","foo"\\r\\n"2","42","1"\\r\\n'
-    >>> def test_generator3():
-    ...     yield ('a', 'z', 'b')
-    ...     yield (1, 26, 2)
-    ...     yield (3, 28, 4)
-    >>> out = format_result_csv(test_generator3(), test_desc, test_url, test_time)
-    >>> ''.join(out)#consume iterator & concat returned strings
-    '"a","b","z"\\r\\n"1","2","26"\\r\\n"3","4","28"\\r\\n'
-    >>> def test_generator4():
-    ...     yield ('foo', 'bar', 'data')
-    >>> out = format_result_csv(test_generator4(), test_desc, test_url, test_time)
-    >>> ''.join(out)#consume iterator & concat returned strings
-    '"bar","data","foo"\\r\\n'
-    """
-    string_stream_output = io.StringIO()
-    bool_sort_keys=True
-    # extract the first set (header row) from the list of sets& write to buffer
-    try:
-        tuple_header_unsorted = next(result_generator)
-        list_header = list(tuple_header_unsorted)
-        if bool_sort_keys:
-            list_header.sort()
-    except StopIteration: #No results! No formatting needed
-        writer = csv.DictWriter( string_stream_output, fieldnames=[], quoting=csv.QUOTE_ALL)
+        Keyword Parameters:
+        results  -- Generator yielding a tuple representing data field
+          names, followed by additional tuples representing data rows
+
+        >>> from unittest.mock import Mock
+        >>> data_source = {'id': 'my.fake', 'description': 'Great data'}
+        >>> fake_req = Mock()
+        >>> fake_req.uri = 'https://example.domain/api/v1/source/my.fake/selection.json'
+        >>> time = datetime.now()
+        >>> formatter = FormatUtil('json', data_source, fake_req, time)
+        >>> def test_generator1():
+        ...     raise StopIteration()
+        ...     yield False #impossible
+        >>> out = formatter.format(test_generator1())
+        >>> '__iter__' in dir(out)#check if iterable
+        True
+        >>> ''.join(out)#consume iterator & concat returned strings
+        '[]'
+        >>> def test_generator2():
+        ...     yield ('foo', 'bar', 'data')
+        ...     yield (1, 2, 42)
+        >>> out = formatter.format(test_generator2())
+        >>> '__iter__' in dir(out)#check if iterable
+        True
+        >>> ''.join(out)#consume iterator & concat returned strings
+        '[{"bar": 2, "data": 42, "foo": 1}]'
+        >>> def test_generator3():
+        ...     yield ('a', 'z', 'b')
+        ...     yield (1, 26, 2)
+        ...     yield (3, 28, 4)
+        >>> out = formatter.format(test_generator3())
+        >>> '__iter__' in dir(out)#check if iterable
+        True
+        >>> ''.join(out)#consume iterator & concat returned strings
+        '[{"a": 1, "b": 2, "z": 26}, {"a": 3, "b": 4, "z": 28}]'
+        """
+        description = self.data_source['description']
+        url = self.request.uri
+        # retrieve the formatting function, from the dict
+        format_function = self.format_info['function']
+        return format_function(self, results)
+
+    def _format_csv(self, results):
+        """
+        Utility function, CSV format a dataset Selection
+
+        Keyword Parameters:
+        results  -- Generator yielding a header tuple & tuples of data
+
+        Returns:
+        String generator -- formatted dataset selection
+
+        >>> from unittest.mock import Mock
+        >>> data_source = {'id': 'my.fake', 'description': "Great data"}
+        >>> fake_req = Mock()
+        >>> fake_req.uri = "https://example.domain/api/v1/source/my.data/selection.csv"
+        >>> time = datetime.now(pytz.timezone('US/Pacific'))
+        >>> formatter = FormatUtil('csv', data_source, fake_req, time)
+        >>> def test_generator1():
+        ...     raise StopIteration()
+        ...     yield False #impossible
+        >>> out = formatter._format_csv(test_generator1())
+        >>> ''.join(out)#consume iterator & concat returned strings
+        '\\r\\n'
+        >>> def test_generator2():
+        ...     yield ('foo', 'bar', 'data')
+        ...     yield (1, 2, 42)
+        >>> out = formatter._format_csv(test_generator2())
+        >>> ''.join(out)#consume iterator & concat returned strings
+        '"bar","data","foo"\\r\\n"2","42","1"\\r\\n'
+        >>> def test_generator3():
+        ...     yield ('a', 'z', 'b')
+        ...     yield (1, 26, 2)
+        ...     yield (3, 28, 4)
+        >>> out = formatter._format_csv(test_generator3())
+        >>> ''.join(out)#consume iterator & concat returned strings
+        '"a","b","z"\\r\\n"1","2","26"\\r\\n"3","4","28"\\r\\n'
+        >>> def test_generator4():
+        ...     yield ('foo', 'bar', 'data')
+        >>> out = formatter._format_csv(test_generator4())
+        >>> ''.join(out)#consume iterator & concat returned strings
+        '"bar","data","foo"\\r\\n'
+        """
+        string_stream_output = io.StringIO()
+        bool_sort_keys=True
+        # extract the first set (header row) from the list of sets& write to buffer
+        try:
+            tuple_header_unsorted = next(results)
+            list_header = list(tuple_header_unsorted)
+            if bool_sort_keys:
+                list_header.sort()
+        except StopIteration: #No results! No formatting needed
+            writer = csv.DictWriter( string_stream_output, fieldnames=[], quoting=csv.QUOTE_ALL)
+            writer.writeheader()
+            yield string_stream_output.getvalue()
+            raise StopIteration()
+
+        writer = csv.DictWriter( string_stream_output, fieldnames=list_header, quoting=csv.QUOTE_ALL)
         writer.writeheader()
         yield string_stream_output.getvalue()
-        raise StopIteration()
 
-    writer = csv.DictWriter( string_stream_output, fieldnames=list_header, quoting=csv.QUOTE_ALL)
-    writer.writeheader()
-    yield string_stream_output.getvalue()
-
-    # convert the list of remaining sets to dicts, and write to buffer
-    while True:
-        set_row = next(result_generator)
-        # build a dict; representing this rows's values, plus the header info
-        dict_row = {}
-        # add each element of the set to dict, using header value as key
-        for index_header, str_header in enumerate(tuple_header_unsorted):
-            dict_row[str_header] = set_row[index_header]
-        # yield new row string
-        string_stream_output = io.StringIO()
-        writer = csv.DictWriter(string_stream_output, fieldnames=list_header, quoting=csv.QUOTE_ALL)
-        writer.writerow(dict_row)
-        yield string_stream_output.getvalue()
-
-def format_result_json(result_generator, description, url, time):
-    """
-    Utility function, JSON format a dataset Selection
-
-    Keyword Parameters:
-    result_generator  -- Generator yielding a header tuple & tuples of data
-    description  -- String, representing the data source's description
-    url  -- String representing url used for this selection request
-    time  -- Datetime representing time result was retrieved
-
-    Returns:
-    String generator -- formatted dataset selection
-
-    >>> test_desc = "Great data"
-    >>> test_url = "https://example.domain/api/v1/source/my.data/selection.json"
-    >>> test_time = datetime.now(pytz.timezone('US/Pacific'))
-    >>> def test_generator1():
-    ...     raise StopIteration()
-    ...     yield False #impossible
-    >>> out = format_result_json(test_generator1(), test_desc, test_url, test_time)
-    >>> '__iter__' in dir(out)#check if iterable
-    True
-    >>> ''.join(out)#consume iterator & concat returned strings
-    '[]'
-    >>> def test_generator2():
-    ...     yield ('foo', 'bar', 'data')
-    ...     yield (1, 2, 42)
-    >>> out = format_result_json(test_generator2(), test_desc, test_url, test_time)
-    >>> '__iter__' in dir(out)#check if iterable
-    True
-    >>> ''.join(out)#consume iterator & concat returned strings
-    '[{"bar": 2, "data": 42, "foo": 1}]'
-    >>> def test_generator3():
-    ...     yield ('a', 'z', 'b')
-    ...     yield (1, 26, 2)
-    ...     yield (3, 28, 4)
-    >>> out = format_result_json(test_generator3(), test_desc, test_url, test_time)
-    >>> '__iter__' in dir(out)#check if iterable
-    True
-    >>> ''.join(out)#consume iterator & concat returned strings
-    '[{"a": 1, "b": 2, "z": 26}, {"a": 3, "b": 4, "z": 28}]'
-    """
-    bool_sort_keys=True
-    # extract the first set (header row) from the list of sets
-    try:
-        tuple_header = next(result_generator)
-    except StopIteration: #No results! No formatting needed
-        string_stream = json.JSONEncoder(sort_keys=bool_sort_keys).iterencode([])
-        return string_stream
-    # convert the list of remaining sets to a new list of dicts
-    dict_generator = json_generator(tuple_header, result_generator)
-    #FIXME: empty results look confusing, return 2 lists (header,data?)
-    string_stream = json.JSONEncoder(sort_keys=bool_sort_keys,iterable_as_array=True).iterencode(dict_generator)
-    return string_stream
-
-def format_result_xlsx(result_generator, description, url, time):
-    """
-    Utility function, XLSX format a dataset Selection
-
-    Keyword Parameters:
-    result_generator  -- Generator yielding a header tuple & tuples of data
-    description  -- String, representing the data source's description
-    url  -- String representing url used for this selection request
-    time  -- Datetime representing time result was retrieved
-
-    Returns:
-    String generator -- formatted dataset selection
-
-    >>> from openpyxl import load_workbook
-    >>> test_desc = "Great data"
-    >>> test_url = "https://example.domain/api/v1/source/my.data/selection.xlsx"
-    >>> test_time = datetime.now(pytz.timezone('US/Pacific'))
-    >>> def test_generator1():
-    ...     raise StopIteration()
-    ...     yield False #impossible
-    >>> out = format_result_xlsx(test_generator1(), test_desc, test_url, test_time)
-    >>> '__iter__' in dir(out)#check if iterable
-    True
-    >>> xlsx_stream = io.BytesIO(b''.join(out))#consume iterator
-    >>> empty = load_workbook(xlsx_stream, read_only=True)
-    >>> all(tab in empty for tab in ['data', 'description'])
-    True
-    >>> empty['data'].max_column, empty['data'].max_row
-    (1, 1)
-    >>> def test_generator2():
-    ...     yield ('foo', 'bar', 'data')
-    ...     yield (1, 2, 42)
-    >>> out = format_result_xlsx(test_generator2(), test_desc, test_url, test_time)
-    >>> '__iter__' in dir(out)#check if iterable
-    True
-    >>> xlsx_stream = io.BytesIO(b''.join(out))#consume iterator
-    >>> two_row = load_workbook(xlsx_stream, read_only=True)
-    >>> two_row['data'].max_column, two_row['data'].max_row
-    (3, 2)
-    >>> def test_generator3():
-    ...     yield ('a', 'z', 'b')
-    ...     yield (1, 26, 2)
-    ...     yield (3, 28, 4)
-    >>> out = format_result_xlsx(test_generator3(), test_desc, test_url, test_time)
-    >>> xlsx_stream = io.BytesIO(b''.join(out))#consume iterator
-    >>> three = load_workbook(xlsx_stream, read_only=True)
-    >>> # check data & column order
-    >>> [[cell.value for cell in row] for row in three['data'].rows]
-    [['a', 'b', 'z'], [1, 2, 26], [3, 4, 28]]
-    """
-    bool_sort_keys=True
-
-    # write Description tab to buffer
-    write_stream = io.BytesIO()
-    workbook = xlsxwriter.Workbook(write_stream)
-    description_sheet = workbook.add_worksheet("description")
-    cell = "A2" #first column, second row
-    options = {'x_offset': 15,
-               'y_offset': 12,
-               'width': 680,
-               'height': 700}
-    template = "Description:\n{}\n\nURL: {}\nRetrieved: {}"
-    time_string = time.strftime("%B %-d, %Y %-I:%M:%S %p %Z")
-    content = template.format(description, url, time_string)
-    description_sheet.insert_textbox(cell, content, options)
-
-    # write data
-    data_sheet = workbook.add_worksheet("data")
-    # extract the first set (header row) from the list of sets& write to sheet
-    try:
-        tuple_header_unsorted = next(result_generator)
-        list_header = list(tuple_header_unsorted)
-        if bool_sort_keys:
-            list_header.sort()
-        #add header row
-        header_row_index = 0 #first row
-        for column_index, value in enumerate(list_header):
-            data_sheet.write(header_row_index, column_index, value)
-    except StopIteration: #No results! No formatting needed
-        workbook.close()
-        yield write_stream.getvalue()
-        raise StopIteration()
-    # write list of remaining sets to buffer
-    try:
-        worksheet_row_index = 0 #header row has already been written
+        # convert the list of remaining sets to dicts, and write to buffer
         while True:
-            set_row = next(result_generator)
-            worksheet_row_index += 1
-            # identify how header row column may differ from data row
+            set_row = next(results)
+            # build a dict; representing this rows's values, plus the header info
+            dict_row = {}
+            # add each element of the set to dict, using header value as key
             for index_header, str_header in enumerate(tuple_header_unsorted):
-                # find what position this column heading has in header row
-                column_index = list_header.index(str_header)
-                cell_value = set_row[index_header]
-                data_sheet.write(worksheet_row_index, column_index, cell_value)
-    except StopIteration:
-        workbook.close()
-        yield write_stream.getvalue()
-        raise StopIteration()
+                dict_row[str_header] = set_row[index_header]
+            # yield new row string
+            string_stream_output = io.StringIO()
+            writer = csv.DictWriter(string_stream_output, fieldnames=list_header, quoting=csv.QUOTE_ALL)
+            writer.writerow(dict_row)
+            yield string_stream_output.getvalue()
+
+    def _format_json(self, results):
+        """
+        Utility function, JSON format a dataset Selection
+
+        Keyword Parameters:
+        results  -- Generator yielding a header tuple & tuples of data
+
+        Returns:
+        String generator -- formatted dataset selection
+
+        >>> from unittest.mock import Mock
+        >>> data_source = {'id': 'my.fake', 'description': "Great data"}
+        >>> fake_req = Mock()
+        >>> fake_req.uri = "https://example.domain/api/v1/source/my.data/selection.json"
+        >>> time = datetime.now(pytz.timezone('US/Pacific'))
+        >>> formatter = FormatUtil('json', data_source, fake_req, time)
+        >>> def test_generator1():
+        ...     raise StopIteration()
+        ...     yield False #impossible
+        >>> out = formatter._format_json(test_generator1())
+        >>> '__iter__' in dir(out)#check if iterable
+        True
+        >>> ''.join(out)#consume iterator & concat returned strings
+        '[]'
+        >>> def test_generator2():
+        ...     yield ('foo', 'bar', 'data')
+        ...     yield (1, 2, 42)
+        >>> out = formatter._format_json(test_generator2())
+        >>> '__iter__' in dir(out)#check if iterable
+        True
+        >>> ''.join(out)#consume iterator & concat returned strings
+        '[{"bar": 2, "data": 42, "foo": 1}]'
+        >>> def test_generator3():
+        ...     yield ('a', 'z', 'b')
+        ...     yield (1, 26, 2)
+        ...     yield (3, 28, 4)
+        >>> out = formatter._format_json(test_generator3())
+        >>> '__iter__' in dir(out)#check if iterable
+        True
+        >>> ''.join(out)#consume iterator & concat returned strings
+        '[{"a": 1, "b": 2, "z": 26}, {"a": 3, "b": 4, "z": 28}]'
+        """
+        bool_sort_keys=True
+        # extract the first set (header row) from the list of sets
+        try:
+            tuple_header = next(results)
+        except StopIteration: #No results! No formatting needed
+            string_stream = json.JSONEncoder(sort_keys=bool_sort_keys).iterencode([])
+            return string_stream
+        # convert the list of remaining sets to a new list of dicts
+        dict_generator = json_generator(tuple_header, results)
+        #FIXME: empty results look confusing, return 2 lists (header,data?)
+        string_stream = json.JSONEncoder(sort_keys=bool_sort_keys,iterable_as_array=True).iterencode(dict_generator)
+        return string_stream
+
+    def _format_xlsx(self, results):
+        """
+        Utility function, XLSX format a dataset Selection
+
+        Keyword Parameters:
+        results  -- Generator yielding a header tuple & tuples of data
+
+        Returns:
+        String generator -- formatted dataset selection
+
+        >>> from openpyxl import load_workbook
+        >>> from unittest.mock import Mock
+        >>> data_source = {'id': 'my.fake', 'description': "Great data"}
+        >>> fake_req = Mock()
+        >>> fake_req.uri = "https://example.domain/api/v1/source/my.data/selection.xlsx"
+        >>> time = datetime.now(pytz.timezone('US/Pacific'))
+        >>> formatter = FormatUtil('xlsx', data_source, fake_req, time)
+        >>> def test_generator1():
+        ...     raise StopIteration()
+        ...     yield False #impossible
+        >>> out = formatter._format_xlsx(test_generator1())
+        >>> '__iter__' in dir(out)#check if iterable
+        True
+        >>> xlsx_stream = io.BytesIO(b''.join(out))#consume iterator
+        >>> empty = load_workbook(xlsx_stream, read_only=True)
+        >>> all(tab in empty for tab in ['data', 'description'])
+        True
+        >>> empty['data'].max_column, empty['data'].max_row
+        (1, 1)
+        >>> def test_generator2():
+        ...     yield ('foo', 'bar', 'data')
+        ...     yield (1, 2, 42)
+        >>> out = formatter._format_xlsx(test_generator2())
+        >>> '__iter__' in dir(out)#check if iterable
+        True
+        >>> xlsx_stream = io.BytesIO(b''.join(out))#consume iterator
+        >>> two_row = load_workbook(xlsx_stream, read_only=True)
+        >>> two_row['data'].max_column, two_row['data'].max_row
+        (3, 2)
+        >>> def test_generator3():
+        ...     yield ('a', 'z', 'b')
+        ...     yield (1, 26, 2)
+        ...     yield (3, 28, 4)
+        >>> out = formatter._format_xlsx(test_generator3())
+        >>> xlsx_stream = io.BytesIO(b''.join(out))#consume iterator
+        >>> three = load_workbook(xlsx_stream, read_only=True)
+        >>> # check data & column order
+        >>> [[cell.value for cell in row] for row in three['data'].rows]
+        [['a', 'b', 'z'], [1, 2, 26], [3, 4, 28]]
+        """
+        bool_sort_keys=True
+
+        # write Description tab to buffer
+        write_stream = io.BytesIO()
+        workbook = xlsxwriter.Workbook(write_stream)
+        description_sheet = workbook.add_worksheet("description")
+        cell = "A2" #first column, second row
+        options = {'x_offset': 15,
+                   'y_offset': 12,
+                   'width': 680,
+                   'height': 700}
+        template = "Description:\n{}\n\nURL: {}\nRetrieved: {}"
+        description = self.data_source['description']
+        url = self.request.uri
+        time_string = self.start_time.strftime("%B %-d, %Y %-I:%M:%S %p %Z")
+        content = template.format(description, url, time_string)
+        description_sheet.insert_textbox(cell, content, options)
+
+        # write data
+        data_sheet = workbook.add_worksheet("data")
+        # extract the first set (header row) from the list of sets& write to sheet
+        try:
+            tuple_header_unsorted = next(results)
+            list_header = list(tuple_header_unsorted)
+            if bool_sort_keys:
+                list_header.sort()
+            #add header row
+            header_row_index = 0 #first row
+            for column_index, value in enumerate(list_header):
+                data_sheet.write(header_row_index, column_index, value)
+        except StopIteration: #No results! No formatting needed
+            workbook.close()
+            yield write_stream.getvalue()
+            raise StopIteration()
+        # write list of remaining sets to buffer
+        try:
+            worksheet_row_index = 0 #header row has already been written
+            while True:
+                set_row = next(results)
+                worksheet_row_index += 1
+                # identify how header row column may differ from data row
+                for index_header, str_header in enumerate(tuple_header_unsorted):
+                    # find what position this column heading has in header row
+                    column_index = list_header.index(str_header)
+                    cell_value = set_row[index_header]
+                    data_sheet.write(worksheet_row_index, column_index, cell_value)
+        except StopIteration:
+            workbook.close()
+            yield write_stream.getvalue()
+            raise StopIteration()
+
+    format_dicts_by_type = {
+     'json': {'function': _format_json
+              ,'content-type': 'application/json'}
+    ,'csv' : {'function': _format_csv
+              ,'content-type': 'text/csv'}
+    ,'xlsx': {'function': _format_xlsx
+              ,'content-type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}
+    }
+    #Dictionary, mapping format IDs to dicts that represent format details
+
+    @classmethod
+    def get_http_content_type(cls, format_id):
+        """
+        Utility function, convert URI type id into HTTP Content-Type header value
+
+        >>> FormatUtil.get_http_content_type('json')
+        'application/json'
+        >>> FormatUtil.get_http_content_type('Json')
+        'application/json'
+        >>> FormatUtil.get_http_content_type('csv')
+        'text/csv'
+        >>> FormatUtil.get_http_content_type('xlsx')
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        """
+        lower_trimmed_id = format_id.strip().lower()
+        try:
+            dict_format = FormatUtil.format_dicts_by_type[lower_trimmed_id]
+            http_content_type = dict_format['content-type']
+            return http_content_type
+        except KeyError:
+            raise falcon.HTTPNotFound(description= "Unrecognized format type: "
+                                                   + format_id)
 
 def json_generator(tuple_header, row_generator):
     """
-    #TODO: document
+    Helper function returning the header+rows as a JSON generator
     """
     while True:
         set_row = next(row_generator)
@@ -513,16 +569,6 @@ def json_generator(tuple_header, row_generator):
         for index_header, str_header in enumerate(tuple_header):
             dict_row[str_header] = set_row[index_header]
         yield dict_row
-
-dict_format_dicts_by_type = {
-     'json': { str_format_dict_function: format_result_json
-             , str_format_dict_http_content: 'application/json'}
-    ,'csv' : { str_format_dict_function: format_result_csv
-             , str_format_dict_http_content: 'text/csv'}
-    ,'xlsx': { str_format_dict_function: format_result_xlsx
-              ,str_format_dict_http_content: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}
-}
-#Dictionary, mapping format IDs to dicts that represent format details
 
 def get_requested_dataset_id(sources, request, resp, params):
     """
