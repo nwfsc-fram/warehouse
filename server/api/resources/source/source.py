@@ -1,7 +1,7 @@
 """
 Module for classes providing a Metadata RESTful endpoint for Warehouse datasets
 
-Copyright (C) 2015-2017 ERT Inc.
+Copyright (C) 2015-2017, 2019 ERT Inc.
 """
 import string
 
@@ -12,6 +12,7 @@ from api.resources.source import data
 from api.resources.source.selection import (
      auth as selection_auth
     ,defaults
+    ,selection
 )
 from api.resources.source.warehouse import warehouse, support
 from api.resource_util import ResourceUtil
@@ -96,10 +97,12 @@ class SourceUtil(ResourceUtil):
          'id': 'warehouse.catch_fact',
          'is_selectable': True,
          'is_sensitive': False,
-         'links': [{'href': 'https://Great.host/warehouse/api/v1/source/warehouse.catch_fact/selection.json',
+         'links': [{'href': 'https://Great.host/warehouse/api/v1/source/warehouse.catch_fact/selection.csv',
+                    'rel': 'csv-selection'},
+                   {'href': 'https://Great.host/warehouse/api/v1/source/warehouse.catch_fact/selection.json',
                     'rel': 'json-selection'},
-                   {'href': 'https://Great.host/warehouse/api/v1/source/warehouse.catch_fact/selection.csv',
-                    'rel': 'csv-selection'}],
+                   {'href': 'https://Great.host/warehouse/api/v1/source/warehouse.catch_fact/selection.xlsx',
+                    'rel': 'xlsx-selection'}],
          'name': 'catch_fact',
          'project': 'warehouse',
          'rows': 99,
@@ -278,23 +281,23 @@ class SourceUtil(ResourceUtil):
         >>> test_url = 'http://test.domain/api/v1/source'
         >>> links = SourceUtil._get_source_hateos_links('proj1.set1', test_url)
         >>> pprint(links)
-        [{'href': 'http://test.domain/api/v1/source/proj1.set1/selection.json',
+        [{'href': 'http://test.domain/api/v1/source/proj1.set1/selection.csv',
+          'rel': 'csv-selection'},
+         {'href': 'http://test.domain/api/v1/source/proj1.set1/selection.json',
           'rel': 'json-selection'},
-         {'href': 'http://test.domain/api/v1/source/proj1.set1/selection.csv',
-          'rel': 'csv-selection'}]
+         {'href': 'http://test.domain/api/v1/source/proj1.set1/selection.xlsx',
+          'rel': 'xlsx-selection'}]
         """
         # Find the base URL where the API is being operated from
         base_url = self.get_base_url(source_url)
 
         # Compose links
-        hateos_links = [
-            {'rel': 'json-selection'
-             ,'href': '{}/{}/selection.json'.format(
-                 base_url, source_api_id)}
-            ,{'rel': 'csv-selection'
-              ,'href': '{}/{}/selection.csv'.format(
-                  base_url, source_api_id)}
-        ]
+        hateos_links = []
+        for format_id in selection.FormatUtil.get_format_ids():
+            link = { 'rel' : '{}-selection'.format(format_id)
+                    ,'href': '{}/{}/selection.{}'.format(
+                              base_url, source_api_id, format_id)}
+            hateos_links.append(link)
         return hateos_links
 
     @classmethod

@@ -13,7 +13,7 @@ The following sections outline the available API features.
 * [/help - API Documentation](#api-documentation)
 * [/p3p - Privacy Information](#privacy-information)
 * [/csw - OCG Catalog Service (Web)](#ogc-catalog-service-for-the-web-csw)
-* [/source/{id}/selection.(json|csv) - Data Selection](#data-selection)
+* [/source/{id}/selection.{format} - Data Selection](#data-selection)
   * [/source/{id}/variables - Data Selection Fields](#available-data-source-variables)
 * [/source/{id}/metadata.(xml|iso) - Data Set Metadata](#data-set-metadata)
 
@@ -159,6 +159,7 @@ The following format ids are available for selection output:
 
 * json -- JavaScript Object Notation text [ECMA-404 JSON Data Interchange Standard](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf)
 * csv -- Comma Separated Values text (Excel-compatible)
+* xlsx -- Excel 2007+ XLSX file format
 
 ### Selection Parameters
 Selection supports four RESTful HTTP query parameters:
@@ -294,4 +295,4 @@ api/v1/source/{source_id}/metadata.iso
 
 Alternatively ISO metadata may be obtained via OGC Catalog Service - Web (CSW) compatible interface. See [OGC Catalog Service for the Web (CSW)](#ogc-catalog-service-for-the-web-csw).
 
-#### Copyright 2015-2018 ERT, Inc. All Rights reserved
+#### Copyright 2015-2019 ERT Inc. All Rights reserved

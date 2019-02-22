@@ -1,7 +1,7 @@
 """
 Module defining a functional test suite for the FRAM Data Warehouse server
 
-Copyright (C) 2015-2017 ERT Inc.
+Copyright (C) 2015-2019 ERT Inc.
 """
 from unittest import TestCase, skip
 from copy import deepcopy
@@ -10,6 +10,7 @@ import time
 import logging
 import configparser
 import requests
+import io
 import platform
 from collections import namedtuple
 from datetime import datetime
@@ -18,11 +19,13 @@ import csv
 import codecs
 from math import ceil
 from random import randint
+import zipfile
 
 import pyparsing
 from lxml import etree
 import pandas
 import dateutil
+import openpyxl
 
 __author__ = "Brandon J. Van Vaerenbergh <brandon.vanvaerenbergh@noaa.gov>, "
 
@@ -1059,16 +1062,16 @@ PC9zYW1scDpSZXNwb25zZT4='''}
         """
         # check formats for a single data set
         source_id = 'trawl.operation_haul_fact'
+        if source_id in dw200_selection_skip: #TODO: DW-200; re-enable check
+            self.skipTest('dw200 skip') #TODO: DW-200; re-enable check
+        if source_id.endswith('_conf'): #TODO: DW-440; use API to determine selectability
+            self.skipTest('_conf skip')
+        if source_id in self.dw440_selection_skip: #TODO: DW-440, add fields to DWSupport
+            self.skipTest('dw440 skip')
         with self.subTest(source_id=source_id):
             # check json formatted output
             format_id = 'json'
             with self.subTest(format_id=format_id):
-                if source_id in dw200_selection_skip: #TODO: DW-200; re-enable check
-                    self.skipTest('dw200 skip') #TODO: DW-200; re-enable check
-                if source_id.endswith('_conf'): #TODO: DW-440; use API to determine selectability
-                    self.skipTest('_conf skip')
-                if source_id in self.dw440_selection_skip: #TODO: DW-440, add fields to DWSupport
-                    self.skipTest('dw440 skip')
                 url = '{}/api/v1/source/{}/selection.{}'.format(
                     get_base_URI(), source_id,format_id)
                 #FIXME: some datasets are so big API server is being killed.
@@ -1094,15 +1097,57 @@ PC9zYW1scDpSZXNwb25zZT4='''}
                 msg = "no dataset's less than {} rows (url: {})"
                 self.assertTrue(result_rows >=expected_rows
                                ,msg.format(expected_rows,url))
+            # check xlsx output
+            format_id = 'xlsx'
+            url = '{}/api/v1/source/{}/selection.{}'.format(
+                get_base_URI(), source_id,format_id)
+            #FIXME: some datasets are so big API server is being killed.
+            #       Warehouse response must be streamed, or otherwise limit memory usage, such as by Filters below:
+            if source_id in self.dict_filters_by_source.keys():
+               url = url+'?filters='+self.dict_filters_by_source[ source_id]
+            with self.subTest(format_id=format_id, url=url):
+                result = requests.get(url, verify=False)
+                # check for error
+                self.assertEqual(result.status_code, 200)
+                # check header
+                self.util_check_p3p_header(result)
+                # check contents
+                result_bytes = result.content
+                #check for .xlsx content
+                self.assertIsInstance(result_bytes, bytes)
+                # manually unzip & check .xlsx description tab TextBox
+                # process inspired by "yamb" 2017
+                xlsx_drawing_path = 'xl/drawings/drawing1.xml'
+                #per: https://bitbucket.org/openpyxl/openpyxl/src/3294de3/openpyxl/drawing/spreadsheet_drawing.py?at=default&fileviewer=file-view-default#spreadsheet_drawing.py-237
+                drawingml_xml = zipfile.ZipFile(io.BytesIO(result_bytes)).read(xlsx_drawing_path)
+                # parse discription tab XML
+                xdr_schema = 'http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing'
+                lxml_tag = '{'+xdr_schema+'}'+'txBody' #use LXML namespace format
+                description_element = next(etree.XML(drawingml_xml).iter(lxml_tag), None)
+                msg = 'txBody element should be in drawing1.xml compressed XLSX subfile'
+                self.assertIsInstance(description_element, etree._Element, msg)
+                a_schema = 'http://schemas.openxmlformats.org/drawingml/2006/main'
+                text_values = [t.text for t in description_element.iter('{'+a_schema+'}t')]
+                #per: http://officeopenxml.com/drwSp-text-paragraph.php
+                description_box_line_one = text_values[0]
+                self.assertEqual(description_box_line_one, 'Description:')
+                description_box_url_line = text_values[-2]
+                expected_value = 'URL: '+url
+                self.assertEqual(description_box_url_line, expected_value)
+                description_box_final_line = text_values[-1]
+                self.assertEqual(description_box_final_line[:11], 'Retrieved: ')
+                # check tab names
+                result_workbook = openpyxl.load_workbook(io.BytesIO(result_bytes))
+                expected_tabs = ['description', 'data']
+                self.assertEqual(result_workbook.sheetnames, expected_tabs)
+                #check XLSX data
+                result_rows = result_workbook['data'].max_row
+                expected_rows = 6
+                msg = "no dataset's less than {} rows".format(expected_rows)
+                self.assertTrue(result_rows >=expected_rows, msg)
             # check csv formatted output
             format_id = 'csv'
             with self.subTest(format_id=format_id):
-                if source_id in dw200_selection_skip: #TODO: DW-200; re-enable check
-                    self.skipTest('dw200 skip') #TODO: DW-200; re-enable check
-                if source_id.endswith('_conf'): #TODO: DW-440; use API to determine selectability
-                    self.skipTest('_conf skip')
-                if source_id in self.dw440_selection_skip: #TODO: DW-440, add fields to DWSupport
-                    self.skipTest('dw440 skip')
                 url = '{}/api/v1/source/{}/selection.{}'.format(
                     get_base_URI(), source_id,format_id)
                 #FIXME: some datasets are so big API server is being killed.
@@ -1125,6 +1170,7 @@ PC9zYW1scDpSZXNwb25zZT4='''}
                 msg = "no dataset's less than {} rows (url: {})"
                 self.assertTrue(result_rows >=expected_rows
                                ,msg.format(expected_rows,url))
+
         # check a dimension, and a dimension role to ensure sql generator works
         additional_source_ids = ['warehouse.sex_dim'
                                  ,'warehouse.best_available_taxonomy_dim']
