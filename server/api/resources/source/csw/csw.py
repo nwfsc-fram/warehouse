@@ -98,7 +98,7 @@ def update_csw_repo():
     except TempRepoLocked as e:
         msg = "Skipping CSW repo update, an update is already in-progress"
         logger.warning(msg)
-        logger.debug(e.__cause__, stack_info=True)
+        logger.debug(e.__cause__, exc_info=True)
     # schedule the next update
     schedule_update()
 

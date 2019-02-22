@@ -181,7 +181,7 @@ class CarteController:
             if response.status_code == 200:
                 return response.content
         except requests.exceptions.ConnectionError as e:
-            logger.warning(e)
+            logger.warning(e, exc_info=True)
         return False
 
     def stop(self):
@@ -523,6 +523,6 @@ class CarteController:
                 responses.append(start_response.content)
             except CarteControllerLoadJobsError as e:
                 #if one Job fails to load, log it & try next job
-                logger.error(e)
+                logger.info(e, exc_info=True)
                 continue
         return responses
