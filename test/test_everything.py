@@ -25,6 +25,7 @@ import pyparsing
 from lxml import etree
 import pandas
 import dateutil
+import openpyxl
 
 __author__ = "Brandon J. Van Vaerenbergh <brandon.vanvaerenbergh@noaa.gov>, "
 
@@ -1098,16 +1099,16 @@ PC9zYW1scDpSZXNwb25zZT4='''}
                                ,msg.format(expected_rows,url))
             # check xlsx output
             format_id = 'xlsx'
-            with self.subTest(format_id=format_id):
-                url = '{}/api/v1/source/{}/selection.{}'.format(
-                    get_base_URI(), source_id,format_id)
-                #FIXME: some datasets are so big API server is being killed.
-                #       Warehouse response must be streamed, or otherwise limit memory usage, such as by Filters below:
-                if source_id in self.dict_filters_by_source.keys():
-                   url = url+'?filters='+self.dict_filters_by_source[ source_id]
+            url = '{}/api/v1/source/{}/selection.{}'.format(
+                get_base_URI(), source_id,format_id)
+            #FIXME: some datasets are so big API server is being killed.
+            #       Warehouse response must be streamed, or otherwise limit memory usage, such as by Filters below:
+            if source_id in self.dict_filters_by_source.keys():
+               url = url+'?filters='+self.dict_filters_by_source[ source_id]
+            with self.subTest(format_id=format_id, url=url):
                 result = requests.get(url, verify=False)
                 # check for error
-                self.assertEqual(result.status_code, 200, url)
+                self.assertEqual(result.status_code, 200)
                 # check header
                 self.util_check_p3p_header(result)
                 # check contents
@@ -1135,7 +1136,15 @@ PC9zYW1scDpSZXNwb25zZT4='''}
                 self.assertEqual(description_box_url_line, expected_value)
                 description_box_final_line = text_values[-1]
                 self.assertEqual(description_box_final_line[:11], 'Retrieved: ')
-                #TODO: check data
+                # check tab names
+                result_workbook = openpyxl.load_workbook(io.BytesIO(result_bytes))
+                expected_tabs = ['description', 'data']
+                self.assertEqual(result_workbook.sheetnames, expected_tabs)
+                #check XLSX data
+                result_rows = result_workbook['data'].max_row
+                expected_rows = 6
+                msg = "no dataset's less than {} rows".format(expected_rows)
+                self.assertTrue(result_rows >=expected_rows, msg)
             # check csv formatted output
             format_id = 'csv'
             with self.subTest(format_id=format_id):
