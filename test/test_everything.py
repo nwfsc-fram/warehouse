@@ -1132,7 +1132,11 @@ PC9zYW1scDpSZXNwb25zZT4='''}
                 description_box_line_one = text_values[0]
                 self.assertEqual(description_box_line_one, 'Description:')
                 description_box_url_line = text_values[-2]
-                expected_value = 'URL: '+url
+                # check for a proxy-aware URL
+                req_host, api_ver, url_path = url.partition('/v1/')
+                conf = _get_dict_suite_parameters()
+                proxy_url = conf['proxy_url_base']+api_ver+url_path
+                expected_value = 'URL: '+proxy_url
                 self.assertEqual(description_box_url_line, expected_value)
                 description_box_final_line = text_values[-1]
                 self.assertEqual(description_box_final_line[:11], 'Retrieved: ')

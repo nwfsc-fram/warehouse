@@ -14,7 +14,9 @@ import falcon
 import xlsxwriter
 
 import api.json as json
+import api.config_loader as loader
 from api.auth import auth
+from api.resource_util import ResourceUtil
 from api.resources.source import (
     source
     ,parameters as source_parameters
@@ -224,7 +226,7 @@ class FormatUtil:
         >>> from unittest.mock import Mock
         >>> data_source = {'id': 'my.fake', 'description': 'Great data'}
         >>> fake_req = Mock()
-        >>> fake_req.uri = 'https://example.domain/api/v1/source/my.fake/selection.json'
+        >>> fake_req.url = 'https://example.domain/api/v1/source/my.fake/selection.json'
         >>> time = datetime.now()
         >>> formatter = FormatUtil('json', data_source, fake_req, time)
         >>> formatter.data_source
@@ -270,7 +272,7 @@ class FormatUtil:
         >>> from unittest.mock import Mock
         >>> data_source = {'id': 'my.fake', 'description': 'Great data'}
         >>> fake_req = Mock()
-        >>> fake_req.uri = 'https://example.domain/api/v1/source/my.fake/selection.json'
+        >>> fake_req.url = 'https://example.domain/api/v1/source/my.fake/selection.json'
         >>> time = datetime.now()
         >>> formatter = FormatUtil('json', data_source, fake_req, time)
         >>> def test_generator1():
@@ -318,7 +320,7 @@ class FormatUtil:
         >>> from unittest.mock import Mock
         >>> data_source = {'id': 'my.fake', 'description': "Great data"}
         >>> fake_req = Mock()
-        >>> fake_req.uri = "https://example.domain/api/v1/source/my.data/selection.csv"
+        >>> fake_req.url = "https://example.domain/api/v1/source/my.data/selection.csv"
         >>> time = datetime.now(pytz.timezone('US/Pacific'))
         >>> formatter = FormatUtil('csv', data_source, fake_req, time)
         >>> def test_generator1():
@@ -391,7 +393,7 @@ class FormatUtil:
         >>> from unittest.mock import Mock
         >>> data_source = {'id': 'my.fake', 'description': "Great data"}
         >>> fake_req = Mock()
-        >>> fake_req.uri = "https://example.domain/api/v1/source/my.data/selection.json"
+        >>> fake_req.url = "https://example.domain/api/v1/source/my.data/selection.json"
         >>> time = datetime.now(pytz.timezone('US/Pacific'))
         >>> formatter = FormatUtil('json', data_source, fake_req, time)
         >>> def test_generator1():
@@ -447,7 +449,7 @@ class FormatUtil:
         >>> from unittest.mock import Mock
         >>> data_source = {'id': 'my.fake', 'description': "Great data"}
         >>> fake_req = Mock()
-        >>> fake_req.uri = "https://example.domain/api/v1/source/my.data/selection.xlsx"
+        >>> fake_req.url = "https://example.domain/api/v1/source/my.data/selection.xlsx"
         >>> time = datetime.now(pytz.timezone('US/Pacific'))
         >>> formatter = FormatUtil('xlsx', data_source, fake_req, time)
         >>> def test_generator1():
@@ -496,7 +498,9 @@ class FormatUtil:
                    'height': 700}
         template = "Description:\n{}\n\nURL: {}\nRetrieved: {}"
         description = self.data_source['description']
-        url = self.request.uri
+        # ensure clickable URL take into account any reverse-proxies
+        api_config = loader.get_api_config()
+        url = ResourceUtil.get_request_url(self.request, api_config)
         time_string = self.start_time.strftime("%B %-d, %Y %-I:%M:%S %p %Z")
         content = template.format(description, url, time_string)
         description_sheet.insert_textbox(cell, content, options)
