@@ -144,6 +144,7 @@ trawl.vessel_end_latitude_dim,,,
 trawl.vessel_end_longitude_dim,,,
 trawl.vessel_start_latitude_dim,,,
 trawl.vessel_start_longitude_dim,,,
+trawl.performance_detail_dim,,skip_select,uuid_is_null
 warehouse.activation_date_dim,,,
 warehouse.area_dim,,,
 warehouse.best_available_taxonomy_dim,,,
