@@ -2691,7 +2691,7 @@ function DialogController($scope, $mdDialog) {
 
     function getTrawlCatchCSV(j_species_codes,j_cycleStartDate,j_cycleEndDate) {
 
-		var get_stmt = api_base_uri+'/api/v1/source/trawl.catch_fact/selection.csv?variables=date_dim$year,date_dim$full_date,sampling_start_hhmmss,sampling_end_hhmmss,vessel,pass,leg,trawl_id,latitude_dd,longitude_dd,station_code,scientific_name,subsample_wt_kg,subsample_count,total_catch_wt_kg,total_catch_numbers,taxonomy_observation_detail_dim$measurement_procurement,partition,performance,depth_m,cpue_kg_per_ha_der,target_station_design_dim$date_stn_invalid_for_trawl_whid,statistical_partition_dim$statistical_partition_type,field_identified_taxonomy_dim$scientific_name,common_name,project,target_station_design_dim$stn_invalid_for_trawl_date_whid';
+		var get_stmt = api_base_uri+'/api/v1/source/trawl.catch_fact/selection.csv?variables=date_dim$year,date_yyyymmdd,sampling_start_hhmmss,sampling_end_hhmmss,vessel,pass,leg,trawl_id,latitude_dd,longitude_dd,station_code,scientific_name,subsample_wt_kg,subsample_count,total_catch_wt_kg,total_catch_numbers,taxonomy_observation_detail_dim$measurement_procurement,partition,performance,depth_m,cpue_kg_per_ha_der,target_station_design_dim$date_stn_invalid_for_trawl_whid,statistical_partition_dim$statistical_partition_type,field_identified_taxonomy_dim$scientific_name,common_name,project,target_station_design_dim$stn_invalid_for_trawl_date_whid';
 			$http.get(get_stmt,{ params: {scientific_name:j_species_codes,filters:'date_yyyymmdd>='+j_cycleStartDate+',date_yyyymmdd<='+j_cycleEndDate}, responseType: 'blob'}).success(function(csv)
 			{
 				var blob = new Blob([csv], {type: 'text/csv'});
