@@ -75,6 +75,12 @@ class SourceTypeError(TypeError):
     """
     pass
 
+class VariablesValueError(ValueError):
+    """
+    Exception raised when URL query 'variables' reference an unknown variable
+    """
+    pass
+
 def get_list_requested_parameter( str_parameter, request):
     """
     Extracts list of values for requested parameter, from query string
@@ -465,6 +471,10 @@ def get_result_subset(result_generator, variables=[]):
     variables  -- list of headers to be retained, in the subset. If
       list is empty then all fields will be retained
 
+    Exceptions:
+    VariablesValueError  -- raised when a variables value is not found in
+      result_generator header row.
+
     >>> def test_generator1():
     ...     yield ('a', 'b', 'z')
     >>> gen = get_result_subset(test_generator1(), [])
@@ -481,6 +491,14 @@ def get_result_subset(result_generator, variables=[]):
     ('z',)
     >>> next(gen)
     (7,)
+    >>> def test_generator3():
+    ...     yield ('a', 'b', 'z')
+    ...     yield (1, 3, 7)
+    >>> gen = get_result_subset(test_generator3(), ['DNE', 'foo'])
+    >>> next(gen)
+    Traceback (most recent call last):
+       ...
+    api.resources.source.selection.parameters.VariablesValueError: ['DNE', 'foo']
     """
     #fetch header row & process, before processing remaining result rows
     tuple_header = next(result_generator)
@@ -504,13 +522,16 @@ def get_result_subset(result_generator, variables=[]):
             for remaining in result_generator:
                 yield remaining #end
 
+    unrecognized = []
     for variable in variables:
         # check if requested var is in header row of result (case insensitive)
         try:
             int_index = get_index_caseinsensitive(variable, tuple_header)
             list_retain_indices.append( int_index)
-        except ValueError:
-            pass # not found, skip
+        except ValueError as e:
+            unrecognized.append(variable)
+    if unrecognized:
+        raise VariablesValueError(unrecognized)
     # return retained indices, to their natural order
     list_retain_indices.sort()
 

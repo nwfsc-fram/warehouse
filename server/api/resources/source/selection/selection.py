@@ -177,7 +177,8 @@ class Selection:
                     formatter = FormatUtil(str_format_type, data_source, request, start_time)
                     result_stream = formatter.format(result_generator)
                     break
-            chunked_stream = streaming.biggerchunks_stream(result_stream, 4)#2(13.6),3(13),4(
+            exception_handled_stream = handle_stream_errors(result_stream)
+            chunked_stream = streaming.biggerchunks_stream(exception_handled_stream, 4)#size 3 was too slow
             if str_format_type == 'xlsx':
                 byte_stream = chunked_stream #already bytes
             else:
@@ -186,6 +187,15 @@ class Selection:
                     encoding = 'utf-8-sig'
                 byte_stream = codecs.iterencode(chunked_stream, encoding)
             resp.stream = byte_stream#content
+
+def handle_stream_errors(result_generator):
+    """
+    Helper function,to check result_generator for known selection errors
+    """
+    try:
+        yield next(result_generator)
+    except parameters.VariablesValueError as err: #TODO: fix, does not catch generator exception
+        raise falcon.HTTPInvalidParam(str(err), 'variables') from err
 
 class FormatUtil:
     """
