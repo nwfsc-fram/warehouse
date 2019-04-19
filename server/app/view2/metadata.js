@@ -57,8 +57,8 @@ angular.module('myApp.metadata', ['ngRoute'])
 
                 if (data[i].links.length>2)
                 {
-                    $scope.json_url = data[i].links[0].href;
-                    $scope.csv_url = data[i].links[1].href;
+                    $scope.json_url = data[i].links[1].href;
+                    $scope.csv_url = data[i].links[0].href;
                 }
 
                 var lastDateUpdated = new Date(data[i].updated);
