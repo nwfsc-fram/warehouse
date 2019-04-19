@@ -55,6 +55,7 @@ angular.module('myApp.metadata', ['ngRoute'])
                 $scope.yearsOfData = data[i].years;
                 $scope.pointOfContact = data[i].contact.replace("<","").replace(">","");
 
+                console.log(data[i].links)
                 if (data[i].links.length==2)
                 {
                     $scope.json_url = data[i].links[0].href;
