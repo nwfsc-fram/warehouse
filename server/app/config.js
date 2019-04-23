@@ -36,7 +36,7 @@ var FANCYTREE_ITEMS = {
 											  OSU_ATSML_3_6_1_4_0 : {key: "88", title:"OSU ATSML v4.0/3.6.1 (Coast-wide)", url : 'https://www.webapps.nwfsc.noaa.gov/server/rest/services/FRAM/EFH_Habitat_Induration_v4_v361/MapServer',mapServices: []},
 											  OSU_ATSML_4_0 : {key: "27", title:"OSU ATSML v4.0", url : 'https://www.webapps.nwfsc.noaa.gov/server/rest/services/FRAM/Habitat_OSU_ATSML_v4_0_IND/MapServer',mapServices: []}},
 						GENERAL : {key: "59", title:"General",
-                                              GROUNDFISH_TRAWL_RCA_POLY_2015_2016 : {key: "65", title:"Groundfish Trawl RCA Polygons (2017 - 2019)", url : 'https://www.webapps.nwfsc.noaa.gov/server/rest/services/FRAM/RCA_CommTrawl_2017_19_poly/MapServer',mapServices: []},
+											  GROUNDFISH_TRAWL_RCA_POLY_2015_2016 : {key: "65", title:"Groundfish Trawl RCA Polygons (2015 - 2016)", url : 'https://www.webapps.nwfsc.noaa.gov/server/rest/services/FRAM/RCA_CommTrawl_2015_16_poly/MapServer',mapServices: []},
                                               GROUNDFISH_TRAWL_RCA_LINES_2015_2016 : {key: "66", title:"Groundfish Trawl RCA Lines (2015 - 2016)", url : 'https://www.webapps.nwfsc.noaa.gov/server/rest/services/FRAM/RCA_CommTrawl_2015_16_line/MapServer',mapServices: []},
 											  ECONOMIC_EXCLUSION_ZONE : {key: "69", title:"Economic Exclusion Zone (EEZ)", url : 'https://maritimeboundaries.noaa.gov/arcgis/rest/services/MaritimeBoundaries/US_Maritime_Limits_Boundaries/MapServer',mapServices: [3]},
 											  MARINE_PROTECTED_AREAS : {key: "70", title:"Marine Protected Areas", url : 'https://www.webapps.nwfsc.noaa.gov/server/rest/services/FRAM/MPA_Inventory_2017_FishRestr/MapServer',mapServices: []},
@@ -98,7 +98,7 @@ var FANCYTREE_ITEMS = {
 							 }
 				},
 		SPATIAL_REFERENCES : {key: "12", title:"Spatial References",
-					
+					GROUNDFISH_TRAWL_RCA_POLY_2017_2019 : {key: "111", title:"Groundfish Trawl RCA Polygons (2017 - 2019)", url : 'https://www.webapps.nwfsc.noaa.gov/server/rest/services/FRAM/RCA_CommTrawl_2017_19_poly/MapServer',mapServices: []},
 			        BATHYMETRIC_CONTOURS : {key: "13", title:"Bathymetric Contours", url : 'https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/gebco_2014_contours/MapServer',mapServices: []},
 			       
 					MARINE_PROTECTED_AREAS : {key: "14", title:"Marine Protected Areas", url : 'https://www.webapps.nwfsc.noaa.gov/server/rest/services/FRAM/MPA_Inventory_2017_FishRestr/MapServer',mapServices: []},
