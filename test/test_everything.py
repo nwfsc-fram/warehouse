@@ -384,7 +384,7 @@ class WarehouseApiV1(WarehouseTestCaseBase):
         # expect no session!
         self.assertEqual(list(result.cookies), [], "No session cookies")
         bad_login_text = result.text
-        bad_password = {'username': 'brandon.vanvaerenbergh'
+        bad_password = {'username': 'nicholas.shaffer'
                        ,'password': 'NotMyPassword'}
         result = requests.post(url, data=bad_password, verify=False)
         self.assertEqual(result.status_code, 401)
