@@ -109,6 +109,7 @@ observer.set_longitude_dim,,,
 observer.set_time_dim,,,
 observer.unspecified_rockfish_depth_dim,,,
 observer.wcgop_baskets_fact,skip_variables,skip_select,uuid_is_null
+observer.wcgop_specimens_fact,skip_variables,skip_select,uuid_is_null
 trawl.actual_station_design_dim,,,
 trawl.catch_fact,,,
 trawl.gear_end_latitude_dim,,,
