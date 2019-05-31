@@ -78,6 +78,7 @@ marine_habitat.bycatch_project_dim,skip_variables,skip_select,uuid_is_null
 marine_habitat.bycatch_species_composition_fact,skip_variables,skip_select,uuid_is_null
 marine_habitat.bycatch_video_direct_count_fact,skip_variables,skip_select,uuid_is_null
 marine_habitat.habitat_use_fact,,,uuid_is_null
+marine_habitat.uhsi_didson_fact,skip_variables,skip_select,uuid_is_null
 observer.ashop_specimen_fact_conf,skip_variables,skip_select,uuid_is_null
 observer.average_depth_dim,,,
 observer.average_latitude_dim,,,
