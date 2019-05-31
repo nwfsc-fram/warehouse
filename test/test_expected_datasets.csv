@@ -78,6 +78,7 @@ marine_habitat.bycatch_project_dim,skip_variables,skip_select,uuid_is_null
 marine_habitat.bycatch_species_composition_fact,skip_variables,skip_select,uuid_is_null
 marine_habitat.bycatch_video_direct_count_fact,skip_variables,skip_select,uuid_is_null
 marine_habitat.habitat_use_fact,,,uuid_is_null
+observer.ashop_specimen_fact_conf,skip_variables,skip_select,uuid_is_null
 observer.average_depth_dim,,,
 observer.average_latitude_dim,,,
 observer.average_longitude_dim,,,
@@ -108,8 +109,8 @@ observer.set_latitude_dim,,,
 observer.set_longitude_dim,,,
 observer.set_time_dim,,,
 observer.unspecified_rockfish_depth_dim,,,
-observer.wcgop_baskets_fact,skip_variables,skip_select,uuid_is_null
-observer.wcgop_specimens_fact,skip_variables,skip_select,uuid_is_null
+observer.wcgop_baskets_fact_conf,skip_variables,skip_select,uuid_is_null
+observer.wcgop_specimens_fact_conf,skip_variables,skip_select,uuid_is_null
 trawl.actual_station_design_dim,,,
 trawl.catch_fact,,,
 trawl.gear_end_latitude_dim,,,
