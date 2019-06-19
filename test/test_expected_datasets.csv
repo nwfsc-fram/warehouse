@@ -8,6 +8,9 @@ acoustics.operation_acoustics_fact,skip_variables,skip_select,uuid_is_null
 acoustics.transect_dim,skip_variables,skip_select,uuid_is_null
 acoustics.oceanographic_ctd_fact,skip_variables,skip_select,uuid_is_null
 acoustics.oceanographic_uctd_fact,skip_variables,skip_select,uuid_is_null
+acoustics.operation_acoustics_fact,skip_variables,skip_select,uuid_is_null
+acoustics.catch_acoustics_fact,skip_variables,skip_select,uuid_is_null
+acoustics.specimen_acoustics_fact,skip_variables,skip_select,uuid_is_null
 edc.catcher_vessel_cost_fact_conf,,,uuid_is_null
 edc.catcher_vessel_revenue_fact_conf,,,uuid_is_null
 edc.catch_share_fact_conf,,,uuid_is_null
