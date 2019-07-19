@@ -76,7 +76,7 @@ hooknline.sunrise_time_dim,,,
 hooknline.sunset_time_dim,,,
 hooknline.tide_station_latitude_dim,,,
 hooknline.tide_station_longitude_dim,,,
-marine_habitat.bycatch_oceanographic_fact,skip_variables,skip_select,uuid_is_null
+marine_habitat.bycatch_mk9_fact,skip_variables,skip_select,uuid_is_null
 marine_habitat.fois_beam_trawl_species_fact,skip_variables,skip_select,uuid_is_null
 marine_habitat.fois_ctd_fact,skip_variables,skip_select,uuid_is_null
 marine_habitat.habitat_use_fact,,,uuid_is_null
