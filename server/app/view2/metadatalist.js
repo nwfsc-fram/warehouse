@@ -40,7 +40,11 @@ angular.module('myApp.metadatalist', ['ngRoute'])
               for ( var i=0, ien=json.sources.length ; i<ien ; i++ )
                   if ((json.sources[i].name.includes("fact") || json.sources[i].name.includes("view")) && !json.sources[i].project.includes("edc") ) {
                       json.sources[i].updated = moment.tz(json.sources[i].updated, "America/Los_Angeles").format('MM/DD/YYYY HH:mm:ss');
-                      json.sources[i].download_links = '<a href=" '+ json.sources[i].links[0].href +' " target="_blank">CSV</a>, <a href="' + json.sources[i].links[1].href + '" target="_blank">JSON</a>, <a href="' + json.sources[i].links[2].href + '" target="_blank">xlsx</a>';
+                      if (json.sources[i].name === "gemm_fact") {
+                          json.sources[i].download_links = '<a href=" '+ json.sources[i].links[0].href +' " target="_blank">CSV</a>, <a href="' + json.sources[i].links[1].href + '" target="_blank">JSON</a>, <a href="' + json.sources[i].links[2].href + '" target="_blank">XLSX</a>';
+                      } else {
+                        json.sources[i].download_links = '<a href=" '+ json.sources[i].links[0].href +' " target="_blank">CSV</a>, <a href="' + json.sources[i].links[1].href + '" target="_blank">JSON</a>';
+                      }
                       metadataList.push(json.sources[i]);
                   }
               return metadataList;
