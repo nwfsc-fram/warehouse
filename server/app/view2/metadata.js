@@ -59,6 +59,7 @@ angular.module('myApp.metadata', ['ngRoute'])
                 {
                     $scope.json_url = data[i].links[1].href;
                     $scope.csv_url = data[i].links[0].href;
+                    console.log($scope.layer)
                     if ($scope.layer === 'GEMM Fact') {
                         $scope.xslx_url = data[i].links[2].href;
                     }
