@@ -2654,20 +2654,16 @@ function DialogController($scope, $mdDialog) {
 
     function getGEMMCSV(j_species_codes,j_cycleStartDate,j_cycleEndDate) {
 
-			var get_stmt = api_base_uri+'/api/v1/source/observer.gemm_fact/selection.csv';
-            var get_config = {responseType: 'blob'};//preserve raw response - see https://docs.angularjs.org/api/ng/service/$http#get
+		var get_stmt = api_base_uri+'/api/v1/source/observer.gemm_fact/selection.csv';
+		var get_config = {responseType: 'blob'};//preserve raw response - see https://docs.angularjs.org/api/ng/service/$http#get
 
-			$http.get(get_stmt, get_config).success(function(csv)
-			{
-				   	var blob = new Blob([csv], {type: 'text/csv'});
-					var filename =  'GEMM.csv';
-					saveCSV(blob,filename);
-			});
-	}
-
-    function getGEMMXLSX() {
-		return api_base_uri+'/api/v1/source/observer.gemm_fact/selection.xlsx';
-	}
+		$http.get(get_stmt, get_config).success(function(csv)
+		{
+				   var blob = new Blob([csv], {type: 'text/csv'});
+				var filename =  'GEMM.csv';
+				saveCSV(blob,filename);
+		});
+}
 
     function getCatchExpansionsCSV(j_species_codes,j_cycleStartDate,j_cycleEndDate) {
 
