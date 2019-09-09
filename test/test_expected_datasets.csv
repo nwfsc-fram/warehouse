@@ -127,6 +127,7 @@ trawl.lower_left_latitude_dim,,,
 trawl.lower_left_longitude_dim,,,
 trawl.lower_right_latitude_dim,,,
 trawl.lower_right_longitude_dim,,,
+trawl.marine_debris_fact,skip_variables,skip_select,uuid_is_null
 trawl.max_depth_dim,,,
 trawl.max_latitude_dim,,,
 trawl.mean_depth_dim,,,
