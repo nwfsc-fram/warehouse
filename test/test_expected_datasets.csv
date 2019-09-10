@@ -157,7 +157,7 @@ warehouse.activation_date_dim,,,
 warehouse.area_dim,,,
 warehouse.best_available_taxonomy_dim,,,
 warehouse.best_available_taxonomy_observation_detail_dim,,,
-warehouse.best_marine_debris_type_dim,,,uuid_is_null
+warehouse.best_marine_debris_type_dim,skip_variables,skip_select,uuid_is_null
 warehouse.captain_person_dim,,,
 warehouse.date_dim,,,
 warehouse.deactivation_date_dim,,,
@@ -165,7 +165,7 @@ warehouse.departure_date_dim,,,
 warehouse.departure_port_dim,,,
 warehouse.depth_dim,,,
 warehouse.field_identified_taxonomy_dim,,,
-warehouse.field_marine_debris_type_dim,,,uuid_is_null
+warehouse.field_marine_debris_type_dim,skip_variables,skip_select,uuid_is_null
 warehouse.fpc_person_dim,,,
 warehouse.group_dim,,,
 warehouse.group_membership_dim,,,
@@ -173,7 +173,7 @@ warehouse.lab_maturity_detail_dim,,,
 warehouse.latitude_dim,,,
 warehouse.length_observation_detail_dim,,,
 warehouse.longitude_dim,,,
-warehouse.marine_debris_type_dim,,,uuid_is_null
+warehouse.marine_debris_type_dim,skip_variables,skip_select,uuid_is_null
 warehouse.most_recent_age_update_date_dim,,,
 warehouse.most_recent_maturity_update_date_dim,,,
 warehouse.most_recent_taxonomy_update_date_dim,,,
