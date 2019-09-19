@@ -286,5 +286,5 @@ app.add_route( get_variables_uri_template(), variables.Variables())
 app = wrap_app_with_session_middleware(app)
 
 # fork off a thread, to perform Pentaho Java server background init
-launcher_thread = Thread(target = start_etl_scheduler)
-launcher_thread.start()
+#launcher_thread = Thread(target = start_etl_scheduler)
+#launcher_thread.start()
