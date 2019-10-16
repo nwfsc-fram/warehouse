@@ -80,6 +80,9 @@ See [warehouse-internal](<mailto:nmfs.nwfsc.fram.data.team@noaa.gov?subject=ware
 ### API
 See: [Client API documentation](server/doc/Client API.md).
 
+For an example of making an authenticated datawarehouse DB query 
+through the API in typscript, see examples/exampleDataPull.ts
+
 ### Packaging
 The service may be packaged for distribution/production installation via the Makefile _package_ target:
 ```bash
