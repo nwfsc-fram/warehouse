@@ -47,7 +47,7 @@ six==1.10.0
 SQLAlchemy==1.1.13
 urllib3==1.21.1
 waitress==1.4.2
-Werkzeug==0.12.2
+Werkzeug==0.15.3
 XlsxWriter==1.1.4
 xmlsec==1.2.0
 xmltodict==0.9.2
