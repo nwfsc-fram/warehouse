@@ -8,8 +8,8 @@ export async function authenticate(): Promise<Object> {
      */
     let authUrl = 'https://www.nwfsc.noaa.gov/data/api/v1/external/login'
     let data = qs.stringify({
-        "username": "nmfs.nwfsc.fram.data.team+pacfin@noaa.gov",
-        "password": "S3ct0rdef$1234"
+        "username": "example",
+        "password": "example"
     });
     const response = await Axios.post(authUrl, data, {
         headers: {'Content-Type' : 'application/x-www-form-urlencoded',
