@@ -170,7 +170,7 @@ warehouse.fpc_person_dim,,,
 warehouse.group_dim,,,
 warehouse.group_membership_dim,,,
 warehouse.lab_maturity_detail_dim,,,
-warehouse.laboratory_dim,,,
+warehouse.laboratory_dim,skip_variables,skip_select,uuid_is_null
 warehouse.latitude_dim,,,
 warehouse.length_observation_detail_dim,,,
 warehouse.longitude_dim,,,
