@@ -1245,16 +1245,29 @@ $scope.showAlert = function(ev) {
 
 
                                 } else {
-                                     //   console.log("dynamicMapLayer");
+									   
+								  if(node.data.url.includes('FeatureServer'))	{
+									   console.log("featureLayer");
+									 var temp_url = node.data.url;
+									  
+									if(node.data.mapServices.length > 0)
+									 	temp_url = temp_url+'/'+node.data.mapServices[0];
+									
+									//    console.log(temp_url);
 
-                                        node.data.layer = L.esri.dynamicMapLayer({
+									   node.data.layer = L.esri.featureLayer({ url: temp_url });
+								  }
+								  else{   //not feature layer
+									   console.log("dynamicMapLayer");
+                                        node.data.layer = L.esri.featureLayer({
                                           url: node.data.url,
                                           layers: node.data.mapServices,
                                           opacity : 1,
                                            pane: 'custom',
                                             useCors: false,
                                             zIndex:1
-                                        });
+										});
+								  }
 
                                 }
 
