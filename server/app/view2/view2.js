@@ -1163,9 +1163,15 @@ $scope.showAlert = function(ev) {
 
         for (var i=0; i<self.checkedLayers.length;i++)
         {
-            if(allLayers[self.checkedLayers[i]]!=undefined)
+			if(allLayers[self.checkedLayers[i]]!=undefined)
+			  console.log('in click');
+				console.log(allLayers[self.checkedLayers[i]]);
                 allLayers[self.checkedLayers[i]].identify().on(map).at(e.latlng).run(function(error, featureCollection){
-                    displayArcGISfields(featureCollection,self.checkedLayers[i]);
+					console.log("error");
+					console.log(error);
+					console.log("featureCollection");
+					console.log(featureCollection);
+					displayArcGISfields(featureCollection,self.checkedLayers[i]);
                 });
         }
 
@@ -1174,6 +1180,7 @@ $scope.showAlert = function(ev) {
 	//This function retrieves ArcGIS fields and
 	//displays them as a marker on the map
 	function displayArcGISfields(featureCollection, key){
+		console.log("in displayArcGISfields");
         if (featureCollection!=null)
         {
             if(identifiedFeature){
@@ -1259,7 +1266,7 @@ $scope.showAlert = function(ev) {
 								  }
 								  else{   //not feature layer
 									   console.log("dynamicMapLayer");
-                                        node.data.layer = L.esri.featureLayer({
+                                        node.data.layer = L.esri.dynamicMapLayer({
                                           url: node.data.url,
                                           layers: node.data.mapServices,
                                           opacity : 1,
