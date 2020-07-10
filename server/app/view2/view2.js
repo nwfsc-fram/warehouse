@@ -946,12 +946,12 @@ $scope.showAlert = function(ev) {
             var opacityLayer = null;
 
 
-            if ($(ev.target).closest('input')[0]!=null)
+            if ($(ev.target).closest('input')[0]!=null )
             {
 	            opacity = $(ev.target).closest('input')[0].value;
 	            opacityLayer = $(ev.target).closest('input')[0].id;
 
-	            if(allLayers[opacityLayer]!=null)
+	            if(allLayers[opacityLayer]!=null  && !allLayers[opacityLayer].options.url.includes('FeatureServer'))
 	                allLayers[opacityLayer].setOpacity(opacity);
 	        }
 
@@ -1205,6 +1205,7 @@ console.log(allLayers[legendLayer].options.url+'legend');
 	//displays them as a marker on the map
 	function displayArcGISfields(featureCollection, key){
 		console.log("in displayArcGISfields");
+
         if (featureCollection!=null)
         {
             if(identifiedFeature){
@@ -1225,8 +1226,9 @@ console.log(allLayers[legendLayer].options.url+'legend');
                     +'        <tbody>';
 
 
-                    var i=0;
-
+					var i=0;
+					console.log("featureCollection.features");
+					console.log(featureCollection.features);
                     for (var prop in featureCollection.features[0].properties) {
                       if(i%2==0)
                         bindHTML +='<tr class="metadataEven"><td>'+prop+'&nbsp;&nbsp;&nbsp;</td><td>'+featureCollection.features[0].properties[prop]+'</td></tr>';
