@@ -702,8 +702,15 @@ $scope.showAlert = function(ev) {
 	// 	api_base_uri = 'https://nwcdevfram.nwfsc.noaa.gov';
 	// else if(api_base_uri.indexOf("devwww11")>=0)
 	// 	api_base_uri = 'https://devwww11.nwfsc.noaa.gov/data';
+	// if(api_base_uri.indexOf("devwebapps")>=0 || api_base_uri.indexOf("localhost")>=0)
+	// 	api_base_uri = 'https://www.devwebapps.nwfsc.noaa.gov/data';
 	// else
 		api_base_uri = 'https://www.nwfsc.noaa.gov/data';
+
+
+		console.log("api_base_uri is");
+
+		console.log(api_base_uri);
 
 /*********************************************************************************************************************************************
 	variable initialization
@@ -896,7 +903,7 @@ $scope.showAlert = function(ev) {
   // Expand all tree nodes, if leaf is a map layer, add transparency child node
   $("#layers").fancytree("getTree").visit(function(node){
 
-    if(node.data.url!=null )
+    if(node.data.url!=null && !node.data.url.includes('FeatureServer'))
 
           node.addChildren({
             title: 'Transparency: <input class="slider-width-custom" id="'+node.key+'"  type="range" min="0" max="1" step="0.01" value="1" >',
@@ -922,7 +929,7 @@ $scope.showAlert = function(ev) {
 
   $("#layers").fancytree("getTree").visit(function(node){
 
-    if(node.data.url!=null )
+    if(node.data.url!=null && !node.data.url.includes('services2.arcgis.com'))
           node.addChildren({
             title: '<a style="min-width:0px" id="zoom'+node.key+'"   >Zoom to Layer</a>',
             icon: false,
@@ -983,7 +990,7 @@ $scope.showAlert = function(ev) {
 
 	            if(allLayers[legendLayer]!=null && $(ev.target).closest('input')[0].checked)
 	            {
-
+console.log(allLayers[legendLayer].options.url+'legend');
                       $.ajax({ url: allLayers[legendLayer].options.url+'legend',
                             success: function(data) {
                                     var legendHTMLResponse = $(data).closest('div.rbody');
@@ -1035,8 +1042,16 @@ $scope.showAlert = function(ev) {
 
 		        if(allLayers[zoomLayer]!=null)
 	            {
+					
 
-                      $.ajax({ url: allLayers[zoomLayer].options.url+'info/iteminfo',
+					 var infoURL = allLayers[zoomLayer].options.url;
+					 if (infoURL.includes('FeatureServer'))
+							 infoURL = infoURL.substr(0,infoURL.length-2);
+					
+					infoURL = infoURL+'info/iteminfo';
+					//console.log(infoURL);
+
+                      $.ajax({ url: infoURL,
                             success: function(data) {
 
                            var bounds = $(data).find("td:contains('[[')")[0].innerHTML;
@@ -1163,16 +1178,25 @@ $scope.showAlert = function(ev) {
 
         for (var i=0; i<self.checkedLayers.length;i++)
         {
-			if(allLayers[self.checkedLayers[i]]!=undefined)
-			  console.log('in click');
-				console.log(allLayers[self.checkedLayers[i]]);
-                allLayers[self.checkedLayers[i]].identify().on(map).at(e.latlng).run(function(error, featureCollection){
-					console.log("error");
-					console.log(error);
-					console.log("featureCollection");
-					console.log(featureCollection);
+			if(allLayers[self.checkedLayers[i]]!=undefined){
+
+				if(allLayers[self.checkedLayers[i]].options.url.includes('FeatureServer'))	{
+				allLayers[self.checkedLayers[i]].query().nearby(e.latlng,100).run(function (error, featureCollection, response) {
+					if (error) {
+					  console.log(error);
+					  return;
+					}
+					console.log('Found ' + featureCollection.features.length + ' features');
 					displayArcGISfields(featureCollection,self.checkedLayers[i]);
-                });
+				  });
+				}
+				else{
+                	allLayers[self.checkedLayers[i]].identify().on(map).at(e.latlng).run(function(error, featureCollection){
+						displayArcGISfields(featureCollection,self.checkedLayers[i]);
+					});
+				}
+			}
+				
         }
 
   });
