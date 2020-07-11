@@ -1264,8 +1264,8 @@ console.log(allLayers[legendLayer].options.url+'legend');
 					else
 					{
                         L.esri.request(node.data.url, {}, function (error, response) {
-
-                                if (response.singleFusedMapCache) {
+console.log(response);
+                                if (response!=null && response.singleFusedMapCache) {
                                        console.log("tiledMapLayer");
                                        node.data.layer = L.esri.tiledMapLayer({
                                             url: node.data.url,
