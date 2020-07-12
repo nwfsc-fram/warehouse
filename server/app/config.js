@@ -8,7 +8,7 @@ var FANCYTREE_ITEMS = {
 	HOOK_LINE : {key: "6", title:"Hook & Line Survey",
 			CATCH : {key: "7", title:"Catch (by Site)", url: "hooknline.catch_hooknline_view"},				
 			SPECIMENS : {key: "8", title:"Specimens", url: "hooknline.individual_hooknline_view"},
-			SAMPLING_SITES: {key: "9", title:"Sampling Sites", url : 'https://www.webapps.nwfsc.noaa.gov/server7/rest/services/Hosted/SoCalHookandLineSurvey/FeatureServer',mapServices: [0]}
+			SAMPLING_SITES: {key: "9", title:"Sampling Sites", url : 'https://www.webapps.nwfsc.noaa.gov/server7/rest/services/FRAM/SoCalHookandLineSurvey/MapServer',mapServices: [0]}
 			},
 	ACOUSTICS_HAKE_SURVEY : {key: "10", title:"Acoustics / Hake Survey",
 			NASC_2012 : {key: "11", title:"NASC 2012", url : 'https://www.webapps.nwfsc.noaa.gov/server7/rest/services/Hosted/Pacific_Hake_Adult_Relative_Adundance/FeatureServer',mapServices: [2]},
@@ -50,18 +50,18 @@ var FANCYTREE_ITEMS = {
 	EFH : {key: "44", title:"Groundfish Essential Fish Habitat (EFH)",
 			AMENDMENT_28 : {key: "45", title:"Amendment 28",
 					EFH_CONS_AREA : {key: "46", title:"EFH Conservation Areas", url : 'https://www.webapps.nwfsc.noaa.gov/server7/rest/services/FRAM/EFH_GF_Amd28_FinalRule/MapServer',mapServices: [0]},
-					EFH_700_FM : {key: "47", title:"EFH 700 fm bottom trawl closure", url : 'https://www.webapps.nwfsc.noaa.gov/server7/rest/services/Hosted/EFH_GF_Amd28_FinalRule/FeatureServer',mapServices: [1]},
-					TRAWL_RCA_REMOVE : {key: "48", title:"Trawl RCA (removed)", url : 'https://www.webapps.nwfsc.noaa.gov/server7/rest/services/Hosted/EFH_GF_Amd28_FinalRule/FeatureServer',mapServices: [3]},
-					DECA : {key: "49", title:"Deep-sea Ecosystem Cons. Area", url : 'https://www.webapps.nwfsc.noaa.gov/server7/rest/services/Hosted/EFH_GF_Amd28_FinalRule/FeatureServer',mapServices: [2]},
-					PFMC_FPA_ALT1H : {key: "50", title:"PFMC Final Preferred Alternative (Alt. 1h)", url : 'https://www.webapps.nwfsc.noaa.gov/server7/rest/services/Hosted/EFH_GF_Amd28_FinalPrefAlt/FeatureServer',mapServices: [0]}
+					EFH_700_FM : {key: "47", title:"EFH 700 fm bottom trawl closure", url : 'https://www.webapps.nwfsc.noaa.gov/server7/rest/services/FRAM/EFH_GF_Amd28_FinalRule/MapServer',mapServices: [1]},
+					TRAWL_RCA_REMOVE : {key: "48", title:"Trawl RCA (removed)", url : 'https://www.webapps.nwfsc.noaa.gov/server7/rest/services/FRAM/EFH_GF_Amd28_FinalRule/MapServer',mapServices: [3]},
+					DECA : {key: "49", title:"Deep-sea Ecosystem Cons. Area", url : 'https://www.webapps.nwfsc.noaa.gov/server7/rest/services/FRAM/EFH_GF_Amd28_FinalRule/MapServer',mapServices: [2]},
+					PFMC_FPA_ALT1H : {key: "50", title:"PFMC Final Preferred Alternative (Alt. 1h)", url : 'https://www.webapps.nwfsc.noaa.gov/server7/rest/services/FRAM/EFH_GF_Amd28_FinalPrefAlt/MapServer',mapServices: [0]}
 					},
 			AMENDMENT_19 : {key: "51", title:"Amendment 19",
-					HAPC_SEAGRASS : {key: "52", title:"HAPC-seagrass", url : 'https://www.webapps.nwfsc.noaa.gov/server7/rest/services/Hosted/EFH_GF_Amd19_FinalRule/FeatureServer',mapServices: [0]},
-					HAPC_CANOPY_KELP : {key: "53", title:"HAPC-canopy kelp", url : 'https://www.webapps.nwfsc.noaa.gov/server7/rest/services/Hosted/EFH_GF_Amd19_FinalRule/FeatureServer',mapServices: [1]},
-					HAPC_ESTUARY : {key: "54", title:"HAPC-estuary", url : 'https://www.webapps.nwfsc.noaa.gov/server7/rest/services/Hosted/EFH_GF_Amd19_FinalRule/FeatureServer',mapServices: [2]},
-					HAPC_ROCKY_REEF : {key: "55", title:"HAPC-rocky reef", url : 'https://www.webapps.nwfsc.noaa.gov/server7/rest/services/Hosted/EFH_GF_Amd19_FinalRule/FeatureServer',mapServices: [3]},
-					HAPC_AOI : {key: "56", title:"HAPC-area of interest", url : 'https://www.webapps.nwfsc.noaa.gov/server7/rest/services/Hosted/EFH_GF_Amd19_FinalRule/FeatureServer',mapServices: [4]},
-					EFH_DESIGNATED_AREA : {key: "57", title:"EFH Designated Area", url : 'https://www.webapps.nwfsc.noaa.gov/server7/rest/services/Hosted/EFH_GF_Amd19_FinalRule/FeatureServer',mapServices: [5]}
+					HAPC_SEAGRASS : {key: "52", title:"HAPC-seagrass", url : 'https://www.webapps.nwfsc.noaa.gov/server7/rest/services/FRAM/EFH_GF_Amd19_FinalRule/MapServer',mapServices: [0]},
+					HAPC_CANOPY_KELP : {key: "53", title:"HAPC-canopy kelp", url : 'https://www.webapps.nwfsc.noaa.gov/server7/rest/services/FRAM/EFH_GF_Amd19_FinalRule/MapServer',mapServices: [1]},
+					HAPC_ESTUARY : {key: "54", title:"HAPC-estuary", url : 'https://www.webapps.nwfsc.noaa.gov/server7/rest/services/FRAM/EFH_GF_Amd19_FinalRule/MapServer',mapServices: [2]},
+					HAPC_ROCKY_REEF : {key: "55", title:"HAPC-rocky reef", url : 'https://www.webapps.nwfsc.noaa.gov/server7/rest/services/FRAM/EFH_GF_Amd19_FinalRule/MapServer',mapServices: [3]},
+					HAPC_AOI : {key: "56", title:"HAPC-area of interest", url : 'https://www.webapps.nwfsc.noaa.gov/server7/rest/services/FRAM/EFH_GF_Amd19_FinalRule/MapServer',mapServices: [4]},
+					EFH_DESIGNATED_AREA : {key: "57", title:"EFH Designated Area", url : 'https://www.webapps.nwfsc.noaa.gov/server7/rest/services/FRAM/EFH_GF_Amd19_FinalRule/MapServer',mapServices: [5]}
 					},
 			SPECIES_DISTRIBUTION : {key: "58", title:"Species Distribution",
 					CORAL_SPONGE_OBS : {key: "59", title:"Coral and Sponge Observations", url : 'https://tiles.arcgis.com/tiles/C8EMgrsFcRFL6LrL/arcgis/rest/services/DSCRTP/MapServer',mapServices: []}
@@ -69,16 +69,16 @@ var FANCYTREE_ITEMS = {
 			},
 	SPATIAL_REFERENCES : {key: "60", title:"Spatial References",
 			BATHYMETRIC_CONTOURS : {key: "61", title:"Bathymetric Contours", url : 'https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/gebco_2014_contours/MapServer',mapServices: []},
-			PFMC_LANDMARKS : {key: "62", title:"PFMC Landmarks", url:'https://www.webapps.nwfsc.noaa.gov/server7/rest/services/Hosted/PFMC_Management_Landmarks_and_Areas/FeatureServer',mapServices: [0]},
-			INPFC_AREAS : {key: "63", title:"INPFC Areas", url:'https://www.webapps.nwfsc.noaa.gov/server7/rest/services/Hosted/PFMC_Management_Landmarks_and_Areas/FeatureServer',mapServices: [1]}
+			PFMC_LANDMARKS : {key: "62", title:"PFMC Landmarks", url:'https://www.webapps.nwfsc.noaa.gov/server7/rest/services/FRAM/PFMC_Management_Landmarks_and_Areas/MapServer',mapServices: [0]},
+			INPFC_AREAS : {key: "63", title:"INPFC Areas", url:'https://www.webapps.nwfsc.noaa.gov/server7/rest/services/FRAM/PFMC_Management_Landmarks_and_Areas/MapServer',mapServices: [1]}
 			},
 			HABITAT_MAP : {key: "64", title:"Habitat Map",
 					SGH_IND : {key: "65", title:"Surficial Geologic Habitat - Induration (hard, mixed, soft)", url : 'https://www.webapps.nwfsc.noaa.gov/server7/rest/services/FRAM/USWestCoast_SeafloorInduration_v4_0/MapServer',mapServices: [0]},
 					SGH_QUALITY : {key: "66", title:"Surficial Geologic Habitat - Data Quality", url : 'https://www.webapps.nwfsc.noaa.gov/server7/rest/services/FRAM/USWestCoast_SeafloorInduration_v4_0/MapServer',mapServices: [2]}
 					},
 			REGULATORY_BOUNDARIES : {key: "67", title:"Regulatory Boundaries",
-					RCA_LINES : {key: "68", title:"RCA Lines (2019-2020)", url:'https://www.webapps.nwfsc.noaa.gov/server7/rest/services/Hosted/West_Coast_Rockfish_Conservation_Areas/FeatureServer',mapServices: [0]},
-					TRAWL_RCA_POLYGONS : {key: "69", title:"Trawl RCA Polygons (2019-2020)", url:'https://www.webapps.nwfsc.noaa.gov/server7/rest/services/Hosted/West_Coast_Rockfish_Conservation_Areas/FeatureServer',mapServices: [1]},
+					RCA_LINES : {key: "68", title:"RCA Lines (2019-2020)", url:'https://www.webapps.nwfsc.noaa.gov/server7/rest/services/FRAM/West_Coast_Rockfish_Conservation_Areas/MapServer',mapServices: [0]},
+					TRAWL_RCA_POLYGONS : {key: "69", title:"Trawl RCA Polygons (2019-2020)", url:'https://www.webapps.nwfsc.noaa.gov/server7/rest/services/FRAM/West_Coast_Rockfish_Conservation_Areas/MapServer',mapServices: [1]},
 					MARINE_PROTECTED_AREAS : {key: "70", title:"Marine Protected Areas", url : 'https://services2.arcgis.com/C8EMgrsFcRFL6LrL/arcgis/rest/services/MPAI_2020_WMS/FeatureServer',mapServices: [0]},
 					EEZ : {key: "71", title:"Economic Exclusion Zone (EEZ)", url : 'https://maritimeboundaries.noaa.gov/arcgis/rest/services/MaritimeBoundaries/US_Maritime_Limits_Boundaries/MapServer',mapServices: [3]},
 					SUBMERGED_LANDS_ACT_BOUNDARY : {key: "72", title:"Submerged Lands Act Boundary", url : 'https://gis.boem.gov/arcgis/rest/services/BOEM_BSEE/MMC_Layers/MapServer',mapServices: [8]}

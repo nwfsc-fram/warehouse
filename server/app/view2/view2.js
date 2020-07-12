@@ -916,7 +916,7 @@ $scope.showAlert = function(ev) {
 
   $("#layers").fancytree("getTree").visit(function(node){
 
-    if(node.data.url!=null )
+    if(node.data.url!=null  && !node.data.url.includes('services2.arcgis.com'))
           node.addChildren({
             title: 'Legend: <input style="min-width:0px" id="'+node.key+'"  type="checkbox"  >',
             icon: false,
