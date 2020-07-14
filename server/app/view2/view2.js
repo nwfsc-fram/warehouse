@@ -903,7 +903,7 @@ $scope.showAlert = function(ev) {
   // Expand all tree nodes, if leaf is a map layer, add transparency child node
   $("#layers").fancytree("getTree").visit(function(node){
 
-    if(node.data.url!=null && !node.data.url.includes('FeatureServer'))
+    if(node.data.url!=null)
 
           node.addChildren({
             title: 'Transparency: <input class="slider-width-custom" id="'+node.key+'"  type="range" min="0" max="1" step="0.01" value="1" >',
@@ -951,8 +951,12 @@ $scope.showAlert = function(ev) {
 	            opacity = $(ev.target).closest('input')[0].value;
 	            opacityLayer = $(ev.target).closest('input')[0].id;
 
+				
 	            if(allLayers[opacityLayer]!=null  && !allLayers[opacityLayer].options.url.includes('FeatureServer'))
-	                allLayers[opacityLayer].setOpacity(opacity);
+					allLayers[opacityLayer].setOpacity(opacity);
+				else if (allLayers[opacityLayer]!=null  && allLayers[opacityLayer].options.url.includes('FeatureServer'))
+					allLayers[opacityLayer].pane.style.opacity = opacity;
+				
 	        }
 
 	});
@@ -1286,9 +1290,12 @@ console.log(response);
 									if(node.data.mapServices.length > 0)
 									 	temp_url = temp_url+'/'+node.data.mapServices[0];
 									
-									//    console.log(temp_url);
+									   var featurePane = map.createPane(node.key);
+									   
+									   node.data.layer = L.esri.featureLayer({ url: temp_url, pane: node.key });
 
-									   node.data.layer = L.esri.featureLayer({ url: temp_url });
+									   //store custom pane for feature layer so we can set opacity later
+									   node.data.layer.pane = featurePane; 
 								  }
 								  else{   //not feature layer
 									   console.log("dynamicMapLayer");
