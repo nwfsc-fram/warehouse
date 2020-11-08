@@ -49,6 +49,33 @@ var spinner = new Spinner(opts).spin(target);
 spinner.stop();
 
 
+/*********************************************************************************************************************************************
+	API URL path setup
+**********************************************************************************************************************************************/
+
+
+	//get the URL absolute path
+	function getAbsolutePath() {
+		var loc = window.location;
+		var pathName = loc.pathname.substring(0, loc.pathname.lastIndexOf('/') + 1);
+		return loc.href.substring(0, loc.href.length - ((loc.pathname + loc.search + loc.hash).length - pathName.length));
+	}
+
+	var api_base_uri = getAbsolutePath();
+
+	if(api_base_uri.indexOf("devwebapps")>=0 || api_base_uri.indexOf("localhost")>=0)
+		api_base_uri = 'https://www.devwebapps.nwfsc.noaa.gov/data';
+	else if(api_base_uri.indexOf("webapps.nwfsc.noaa.gov")>=0 )
+		api_base_uri = 'https://www.webapps.nwfsc.noaa.gov/data';
+	else
+		api_base_uri = 'https://www.nwfsc.noaa.gov/data';
+
+		console.log("api_base_uri is");
+
+		console.log(api_base_uri);
+
+    // external user, new account creation base path
+    var register_base_uri = 'https://nwcdevfram.nwfsc.noaa.gov:8543/auth';
 
 /*********************************************************************************************************************************************
 	Meta data tool button section content
@@ -115,7 +142,7 @@ var apiContent='<h2>Application Programming Interface (API)</h2>'
 +'<h3>Getting Started - Your First RESTful API Query</h3>'
 +'The following URL shows a sample query for Petrale sole (scientific name = Eopsetta jordani), against the trawl survey catch data, from 2010 until 2012:<br><br>'
 +'<i>json output</i><br>'
-+'<a href="https://www.nwfsc.noaa.gov/data/api/v1/source/trawl.catch_fact/selection.json?filters=field_identified_taxonomy_dim$scientific_name=Eopsetta%20jordani,date_dim$year>=2010,date_dim$year<=2012&variables=date_yyyymmdd,field_identified_taxonomy_dim$scientific_name" target="_blank">https:\/\/www.nwfsc.noaa.gov\/data\/api\/v1\/source\/trawl.catch_fact\/selection.json?filters=field_identified_taxonomy_dim$scientific_name=Eopsetta%20jordani,date_dim$year>=2010,date_dim$year<=2012<br>&variables=date_yyyymmdd,field_identified_taxonomy_dim$scientific_name</a><br><br>'
++'<a href="'+api_base_uri+'/api/v1/source/trawl.catch_fact/selection.json?filters=field_identified_taxonomy_dim$scientific_name=Eopsetta%20jordani,date_dim$year>=2010,date_dim$year<=2012&variables=date_yyyymmdd,field_identified_taxonomy_dim$scientific_name" target="_blank">https:\/\/www.webapps.nwfsc.noaa.gov\/data\/api\/v1\/source\/trawl.catch_fact\/selection.json?filters=field_identified_taxonomy_dim$scientific_name=Eopsetta%20jordani,date_dim$year>=2010,date_dim$year<=2012<br>&variables=date_yyyymmdd,field_identified_taxonomy_dim$scientific_name</a><br><br>'
 +'Click on it and you should get back a stream of json-formatted data in your web browser that shows the date and scientific name that looks like the following:<br><br>'
 +'<table  class="display" cellspacing="0" width="60%">'
 +'        <thead align="left">'
@@ -132,7 +159,7 @@ var apiContent='<h2>Application Programming Interface (API)</h2>'
 +' </table>	<br><br>'
 +'If you\'d prefer a csv download of the data, change selection.json to selection.csv as follows:<br><br>'
 +'<i>csv output</i><br>'
-+'<a href="https://www.nwfsc.noaa.gov/data/api/v1/source/trawl.catch_fact/selection.csv?filters=field_identified_taxonomy_dim$scientific_name=Eopsetta%20jordani,date_dim$year>=2010,date_dim$year<=2012&variables=date_yyyymmdd,field_identified_taxonomy_dim$scientific_name" target="_blank">https://www.nwfsc.noaa.gov/data/api/v1/source/trawl.catch_fact/selection.csv?filters=field_identified_taxonomy_dim$scientific_name=Eopsetta%20jordani,date_dim$year>=2010,date_dim$year<=2012><br>&variables=date_yyyymmdd,field_identified_taxonomy_dim$scientific_name</a><br><br>'
++'<a href="'+api_base_uri+'/api/v1/source/trawl.catch_fact/selection.csv?filters=field_identified_taxonomy_dim$scientific_name=Eopsetta%20jordani,date_dim$year>=2010,date_dim$year<=2012&variables=date_yyyymmdd,field_identified_taxonomy_dim$scientific_name" target="_blank">'+api_base_uri+'/api/v1/source/trawl.catch_fact/selection.csv?filters=field_identified_taxonomy_dim$scientific_name=Eopsetta%20jordani,date_dim$year>=2010,date_dim$year<=2012><br>&variables=date_yyyymmdd,field_identified_taxonomy_dim$scientific_name</a><br><br>'
 +'<h3>Dissecting the URL</h3>'
 +'Now let\'s dissect the components of the URL to understand what is happening:<br>'
 +'<img src="images/QueryURL.png" WIDTH="770" HEIGHT="507" BORDER=0 ALT="Query URL"/><br><br>'
@@ -146,12 +173,12 @@ var apiContent='<h2>Application Programming Interface (API)</h2>'
 +'        </thead>'
 +'        <tbody>'
 
-+'<tr class="metadataEven"><td>Base URL</td><td>Base URL for the API</td><td>https://www.nwfsc.noaa.gov/data/api/v1/source</td></tr>'
-+'<tr class="metadataOdd"><td>Layer</td><td>Name of the layer you\'re querying. A listing of all layers can be obtained at the following url: <a href="https://www.nwfsc.noaa.gov/data/api/v1/source/" target="_blank">https://www.nwfsc.noaa.gov/data/api/v1/source/</a>. Note that the layer names are called id at this URL.</td><td>trawl.catch_fact</td></tr>'
++'<tr class="metadataEven"><td>Base URL</td><td>Base URL for the API</td><td>'+api_base_uri+'/api/v1/source</td></tr>'
++'<tr class="metadataOdd"><td>Layer</td><td>Name of the layer you\'re querying. A listing of all layers can be obtained at the following url: <a href="'+api_base_uri+'/api/v1/source/" target="_blank">'+api_base_uri+'/api/v1/source/</a>. Note that the layer names are called id at this URL.</td><td>trawl.catch_fact</td></tr>'
 +'<tr class="metadataEven"><td>Content</td><td>The type of content you want to receive. Possibilities include selection.json, selection.csv, and variables (to get a listing of variables for the layer)</td><td>selection.json</td></tr>'
 +'<tr class="metadataOdd"><td>Query Filters</td><td>This will start with filters= and then is appended with a listing of key=value pairs separated by commas</td><td>filters=field_identified_taxonomy_dim$scientific_name=Eopsetta%20jordani,date_dim$year>=2010,date_dim$year<=2012</td></tr>'
 +'<tr class="metadataEven"><td>Requested Variables</td><td>List of variables, comma separated, that you want to return, leave blank to return all variables (but this will incur a performance hit due to the large number of variables)</td><td>variables=date_yyyymmdd,field_identified_taxonomy_dim$scientific_name</td></tr>'
-+'<tr class="metadataOdd"><td>Complete URL</td><td>The full URL</td><td><a href="https://www.nwfsc.noaa.gov/data/api/v1/source/trawl.catch_fact/selection.json?filters=field_identified_taxonomy_dim$scientific_name=Eopsetta%20jordani,date_dim$year>=2010,date_dim$year<=2012&variables=date_yyyymmdd,field_identified_taxonomy_dim$scientific_name" target="_blank">https://www.nwfsc.noaa.gov/data/api/v1/source/trawl.catch_fact/selection.json?filters=field_identified_taxonomy_dim$scientific_name=Eopsetta%20jordani,date_dim$year>=2010,date_dim$year<=2012<br>&variables=date_yyyymmdd,field_identified_taxonomy_dim$scientific_name</a></td></tr>'
++'<tr class="metadataOdd"><td>Complete URL</td><td>The full URL</td><td><a href="'+api_base_uri+'/api/v1/source/trawl.catch_fact/selection.json?filters=field_identified_taxonomy_dim$scientific_name=Eopsetta%20jordani,date_dim$year>=2010,date_dim$year<=2012&variables=date_yyyymmdd,field_identified_taxonomy_dim$scientific_name" target="_blank">'+api_base_uri+'/api/v1/source/trawl.catch_fact/selection.json?filters=field_identified_taxonomy_dim$scientific_name=Eopsetta%20jordani,date_dim$year>=2010,date_dim$year<=2012<br>&variables=date_yyyymmdd,field_identified_taxonomy_dim$scientific_name</a></td></tr>'
 
 +'        </tbody>'
 +' </table>	<br><br>'
@@ -168,13 +195,13 @@ var apiContent='<h2>Application Programming Interface (API)</h2>'
 +'        </thead>'
 +'        <tbody>'
 
-+'<tr class="metadataEven"><td>Trawl Survey Catch</td><td>trawl.catch_fact&nbsp;&nbsp;</td><td><a href="https://www.nwfsc.noaa.gov/data/api/v1/source/trawl.catch_fact/variables" target="_blank">https://www.nwfsc.noaa.gov/data/api/v1/source/trawl.catch_fact/variables</a></td></tr>'
-+'<tr class="metadataOdd"><td>Trawl Survey Specimens</td><td>trawl.individual_fact&nbsp;&nbsp;</td><td><a href="https://www.nwfsc.noaa.gov/data/api/v1/source/trawl.individual_fact/variables" target="_blank">https://www.nwfsc.noaa.gov/data/api/v1/source/trawl.individual_fact/variables</a></td></tr>'
-+'<tr class="metadataEven"><td>Trawl Survey Haul Characteristics (includes environmental data)</td><td>trawl.operation_haul_fact&nbsp;&nbsp;</td><td><a href="https://www.nwfsc.noaa.gov/data/api/v1/source/trawl.operation_haul_fact/variables" target="_blank">https://www.nwfsc.noaa.gov/data/api/v1/source/trawl.operation_haul_fact/variables</a></td></tr>'
-+'<tr class="metadataOdd"><td>Hook & Line Survey Catch</td><td>hooknline.catch_hooknline_view&nbsp;&nbsp;</td><td><a href="https://www.nwfsc.noaa.gov/data/api/v1/source/hooknline.catch_hooknline_view/variables" target="_blank">https://www.nwfsc.noaa.gov/data/api/v1/source/hooknline.catch_hooknline_view/variables</a></td></tr>'
-+'<tr class="metadataEven"><td>Hook & Line Survey Specimens</td><td>	hooknline.individual_hooknline_view&nbsp;&nbsp;</td><td><a href="https://www.nwfsc.noaa.gov/data/api/v1/source/hooknline.individual_hooknline_view/variables" target="_blank">https://www.nwfsc.noaa.gov/data/api/v1/source/hooknline.individual_hooknline_view/variables</a></td></tr>'
-+'<tr class="metadataOdd"><td>Hook & Line Survey Site Characteristics (includes environmental data)</td><td>warehouse.operation_hook_fact&nbsp;&nbsp;</td><td><a href="https://www.nwfsc.noaa.gov/data/api/v1/source/warehouse.operation_hook_fact/variables" target="_blank">https://www.nwfsc.noaa.gov/data/api/v1/source/warehouse.operation_hook_fact/variables</a></td></tr>'
-+'<tr class="metadataEven"><td>Observer Aggregated Catch</td><td>observer.catch_observer_view&nbsp;&nbsp;</td><td><a href="https://www.nwfsc.noaa.gov/data/api/v1/source/observer.catch_observer_view/variables" target="_blank">https://www.nwfsc.noaa.gov/data/api/v1/source/observer.catch_observer_view/variables</a></td></tr>'
++'<tr class="metadataEven"><td>Trawl Survey Catch</td><td>trawl.catch_fact&nbsp;&nbsp;</td><td><a href="'+api_base_uri+'/api/v1/source/trawl.catch_fact/variables" target="_blank">'+api_base_uri+'/api/v1/source/trawl.catch_fact/variables</a></td></tr>'
++'<tr class="metadataOdd"><td>Trawl Survey Specimens</td><td>trawl.individual_fact&nbsp;&nbsp;</td><td><a href="'+api_base_uri+'/api/v1/source/trawl.individual_fact/variables" target="_blank">'+api_base_uri+'/api/v1/source/trawl.individual_fact/variables</a></td></tr>'
++'<tr class="metadataEven"><td>Trawl Survey Haul Characteristics (includes environmental data)</td><td>trawl.operation_haul_fact&nbsp;&nbsp;</td><td><a href="'+api_base_uri+'/api/v1/source/trawl.operation_haul_fact/variables" target="_blank">'+api_base_uri+'/api/v1/source/trawl.operation_haul_fact/variables</a></td></tr>'
++'<tr class="metadataOdd"><td>Hook & Line Survey Catch</td><td>hooknline.catch_hooknline_view&nbsp;&nbsp;</td><td><a href="'+api_base_uri+'/api/v1/source/hooknline.catch_hooknline_view/variables" target="_blank">'+api_base_uri+'/api/v1/source/hooknline.catch_hooknline_view/variables</a></td></tr>'
++'<tr class="metadataEven"><td>Hook & Line Survey Specimens</td><td>	hooknline.individual_hooknline_view&nbsp;&nbsp;</td><td><a href="'+api_base_uri+'/api/v1/source/hooknline.individual_hooknline_view/variables" target="_blank">'+api_base_uri+'/api/v1/source/hooknline.individual_hooknline_view/variables</a></td></tr>'
++'<tr class="metadataOdd"><td>Hook & Line Survey Site Characteristics (includes environmental data)</td><td>warehouse.operation_hook_fact&nbsp;&nbsp;</td><td><a href="'+api_base_uri+'/api/v1/source/warehouse.operation_hook_fact/variables" target="_blank">'+api_base_uri+'/api/v1/source/warehouse.operation_hook_fact/variables</a></td></tr>'
++'<tr class="metadataEven"><td>Observer Aggregated Catch</td><td>observer.catch_observer_view&nbsp;&nbsp;</td><td><a href="'+api_base_uri+'/api/v1/source/observer.catch_observer_view/variables" target="_blank">'+api_base_uri+'/api/v1/source/observer.catch_observer_view/variables</a></td></tr>'
 
 +'        </tbody>'
 +' </table>	'
@@ -187,7 +214,7 @@ var apiContent='<h2>Application Programming Interface (API)</h2>'
 +'There are three primary URL endpoints in the API. These are RESTful URLs and, by appending parameters to these URLs, enable users to directly query against the data warehouse. The endpoints are:<br><br>'
 +'<h4><i>Source</i></h4>'
 +'The source endpoint contains listing of all of the dimension and fact tables, some basic metadata about them, and can be found at the following url:<br>'
-+'<a href="https://www.nwfsc.noaa.gov/data/api/v1/source/" target="_blank">https://www.nwfsc.noaa.gov/data/api/v1/source/</a><br><br>'
++'<a href="'+api_base_uri+'/api/v1/source/" target="_blank">'+api_base_uri+'/api/v1/source/</a><br><br>'
 +'Critically important for each layer identified in the source URL is the id element. This id element is what is subsequently used to query for layer variables and actual layer data. A sample layer entry looks like the following:<br>'
 +'<table  class="display" cellspacing="0" width="60%">'
 +'        <thead align="left">'
@@ -214,7 +241,7 @@ var apiContent='<h2>Application Programming Interface (API)</h2>'
 +'So in this instance, the id is warehouse.latitude_dim. This means that we\'re looking at a dimension table (notice the _dim suffix) that contains latitude information. Alternatively, an id can end in _fact or _view that represent fact tables and views respectively (Our fact views are actually database views built on top of other fact tables, thus the _view suffix in certain cases).'
 +'<h4><i>Layer Variables</i></h4>'
 +'The various layers variables endpoints provide a listing of all of the available variables for a given layer. The URL includes the name of the layer as provided in the source URL above. So, for instance, one could get all of the available variables for the trawl.catch_fact layer (which contains the Trawl Survey Catch data) at the following URL:<br>'
-+'<a href="https://www.nwfsc.noaa.gov/data/api/v1/source/trawl.catch_fact/variables" target="_blank">https://www.nwfsc.noaa.gov/data/api/v1/source/trawl.catch_fact/variables</a><br><br>'
++'<a href="'+api_base_uri+'/api/v1/source/trawl.catch_fact/variables" target="_blank">'+api_base_uri+'/api/v1/source/trawl.catch_fact/variables</a><br><br>'
 +'Note the "trawl.catch_fact" parameter in the URL, indicating the layer of interest.<br>'
 +'<h4><i>Selection</i></h4>'
 +'The selection endpoint allows a user to actually retrieve the data. A basic selection URL for the trawl survey catch layer looks like the following:<br>'
@@ -228,14 +255,14 @@ var apiContent='<h2>Application Programming Interface (API)</h2>'
 +'        </thead>'
 +'        <tbody>'
 
-+'<tr class="metadataEven"><td>json</td><td>selection.json&nbsp;&nbsp;</td><td><a href="https://www.nwfsc.noaa.gov/data/api/v1/source/trawl.catch_fact/selection.json" target="_blank">https://www.nwfsc.noaa.gov/data/api/v1/source/trawl.catch_fact/selection.json</a></td></tr>'
-+'<tr class="metadataOdd"><td>csv</td><td>selection.csv&nbsp;&nbsp;</td><td><a href="https://www.nwfsc.noaa.gov/data/api/v1/source/trawl.catch_fact/selection.csv" target="_blank">https://www.nwfsc.noaa.gov/data/api/v1/source/trawl.catch_fact/selection.csv</a></td></tr>'
++'<tr class="metadataEven"><td>json</td><td>selection.json&nbsp;&nbsp;</td><td><a href="'+api_base_uri+'/api/v1/source/trawl.catch_fact/selection.json" target="_blank">'+api_base_uri+'/api/v1/source/trawl.catch_fact/selection.json</a></td></tr>'
++'<tr class="metadataOdd"><td>csv</td><td>selection.csv&nbsp;&nbsp;</td><td><a href="'+api_base_uri+'/api/v1/source/trawl.catch_fact/selection.csv" target="_blank">'+api_base_uri+'/api/v1/source/trawl.catch_fact/selection.csv</a></td></tr>'
 
 +'        </tbody>'
 +' </table>	'
 +'<h4>Query Filters</h4>'
 +'One can add comma-separated query filters to the ending of the selection endpoint to query for a filtered dataset as follows:<br>'
-+'<a href="https://www.nwfsc.noaa.gov/data/api/v1/source/trawl.catch_fact/selection.json?filters=field_identified_taxonomy_dim$scientific_name=Sebastes%20aurora,date_dim$year=2014" target="_blank">https://www.nwfsc.noaa.gov/data/api/v1/source/trawl.catch_fact/selection.json?<br>filters=field_identified_taxonomy_dim$scientific_name=Sebastes%20aurora,date_dim$year=2014</a><br><br>'
++'<a href="'+api_base_uri+'/api/v1/source/trawl.catch_fact/selection.json?filters=field_identified_taxonomy_dim$scientific_name=Sebastes%20aurora,date_dim$year=2014" target="_blank">'+api_base_uri+'/api/v1/source/trawl.catch_fact/selection.json?<br>filters=field_identified_taxonomy_dim$scientific_name=Sebastes%20aurora,date_dim$year=2014</a><br><br>'
 +'The following filter operations are supported:<br>'
 +'<table  class="display" cellspacing="0" width="60%">'
 +'        <thead align="left">'
@@ -266,22 +293,17 @@ var apiContent='<h2>Application Programming Interface (API)</h2>'
 +'_filters=MyFieldName|=["321"%2C"987"] - matches any records with an exact value of either 321 or 987.<br>'
 +'<h4>Subsetted Variables</h4>'
 +'One can provide a list of comma-separated list of variable names for subsetting what variables are returned from the query as follows:'
-+'<a href="https://www.nwfsc.noaa.gov/data/api/v1/source/trawl.catch_fact/selection.json?variables=field_identified_taxonomy_dim$scientific_name,date_dim$year" target="_blank">https://www.nwfsc.noaa.gov/data/api/v1/source/trawl.catch_fact/selection.json?<br>variables=field_identified_taxonomy_dim$scientific_name,date_dim$year</a>';
-+'<a href="https://www.nwfsc.noaa.gov/data/api/v1/source/" target="_blank">https://www.nwfsc.noaa.gov/data/api/v1/source/</a><br><br>'
++'<a href="'+api_base_uri+'/api/v1/source/trawl.catch_fact/selection.json?variables=field_identified_taxonomy_dim$scientific_name,date_dim$year" target="_blank">'+api_base_uri+'/api/v1/source/trawl.catch_fact/selection.json?<br>variables=field_identified_taxonomy_dim$scientific_name,date_dim$year</a>';
++'<a href="'+api_base_uri+'/api/v1/source/" target="_blank">'+api_base_uri+'/api/v1/source/</a><br><br>'
 
 
 var contactUsContent='Please contact us with feedback, questions, and any requests that you might have regarding the FRAM Data Warehouse at the following email:<br><br>'
-+'<a href="mailto:nmfs.nwfsc.fram.data.team@noaa.gov" >nmfs.nwfsc.fram.data.team@noaa.gov</a><br><br>'
-+'You may also contact the FRAM Data Team lead directly at:<br><br>'
-+'Todd Hay<br>'
-+'NWFSC/FRAM<br>'
-+'<a href="mailto:todd.hay@noaa.gov" >todd.hay@noaa.gov</a><br>'
-+'206.302.2449';
++'<a href="mailto:nmfs.nwfsc.fram.data.team@noaa.gov" >nmfs.nwfsc.fram.data.team@noaa.gov</a>';
 
 
 
 var aboutUsContent='<h2>About</h2>'
-+'The FRAM Data Warehouse aims to provide a single location where users can access and download all data collected by the <a href="http://www.nwfsc.noaa.gov/" target="_blank">NOAA Northwest Fisheries Science Center (NWFSC)</a> <a href="http://www.nwfsc.noaa.gov/research/divisions/fram/index.cfm" target="_blank">Fishery Resource Analysis & Monitoring (FRAM)</a> division. This includes data from the following FRAM programs/surveys:<br>'
++'The FRAM Data Warehouse aims to provide a single location where users can access and download all data collected by the <a href="https://www.fisheries.noaa.gov/about/northwest-fisheries-science-center" target="_blank">NOAA Northwest Fisheries Science Center (NWFSC)</a> <a href="https://www.fisheries.noaa.gov/about/fishery-resource-analysis-and-monitoring-division-northwest-fisheries-science-center" target="_blank">Fishery Resource Analysis & Monitoring (FRAM)</a> division. This includes data from the following FRAM programs/surveys:<br>'
 +'<ul><li>Acoustics Survey - Integrated Hake Acoustics Survey</li>'
 +'<li>Economics & Social Science Research (ESSR)</li>'
 +'<li>Hook & Line Survey - Southern California Hook & Line Survey</li>'
@@ -684,33 +706,6 @@ $scope.showAlert = function(ev) {
 
 	});
 
-/*********************************************************************************************************************************************
-	API URL path setup
-**********************************************************************************************************************************************/
-
-
-	//get the URL absolute path
-	function getAbsolutePath() {
-		var loc = window.location;
-		var pathName = loc.pathname.substring(0, loc.pathname.lastIndexOf('/') + 1);
-		return loc.href.substring(0, loc.href.length - ((loc.pathname + loc.search + loc.hash).length - pathName.length));
-	}
-
-	var api_base_uri = getAbsolutePath();
-
-	// if(api_base_uri.indexOf("nwcdevfram")>=0 || api_base_uri.indexOf("localhost")>=0)
-	// 	api_base_uri = 'https://nwcdevfram.nwfsc.noaa.gov';
-	// else if(api_base_uri.indexOf("devwww11")>=0)
-	// 	api_base_uri = 'https://devwww11.nwfsc.noaa.gov/data';
-	// if(api_base_uri.indexOf("devwebapps")>=0 || api_base_uri.indexOf("localhost")>=0)
-	// 	api_base_uri = 'https://www.devwebapps.nwfsc.noaa.gov/data';
-	// else
-		api_base_uri = 'https://www.nwfsc.noaa.gov/data';
-
-
-		console.log("api_base_uri is");
-
-		console.log(api_base_uri);
 
 /*********************************************************************************************************************************************
 	variable initialization
@@ -722,9 +717,6 @@ $scope.showAlert = function(ev) {
 	var self = this;
 	var j_cycleStartDate = '1/1/1900';
 	var j_cycleEndDate = '1/1/3000';
-
-    // external user, new account creation base path
-    var register_base_uri = 'https://nwcdevfram.nwfsc.noaa.gov:8543/auth';
 
 	var randomColor = new Dict();
 	var today = new Date();
@@ -875,7 +867,7 @@ $scope.showAlert = function(ev) {
 						{title: FANCYTREE_ITEMS.EFH.SPECIES_DISTRIBUTION.title, key: FANCYTREE_ITEMS.EFH.SPECIES_DISTRIBUTION.key, folder: true, icon: true, children: [
 							{title: '<a target="_blank" title="'+FANCYTREE_ITEMS.EFH.SPECIES_DISTRIBUTION.CORAL_SPONGE_OBS.title+'" href="'+FANCYTREE_ITEMS.EFH.SPECIES_DISTRIBUTION.CORAL_SPONGE_OBS.url+'" >'+FANCYTREE_ITEMS.EFH.SPECIES_DISTRIBUTION.CORAL_SPONGE_OBS.title+'</a>', key: FANCYTREE_ITEMS.EFH.SPECIES_DISTRIBUTION.CORAL_SPONGE_OBS.key, data:{/*layer:efhSpeciesDistributionCoralSpongeObsMapLayer , */url:FANCYTREE_ITEMS.EFH.SPECIES_DISTRIBUTION.CORAL_SPONGE_OBS.url, mapServices:FANCYTREE_ITEMS.EFH.SPECIES_DISTRIBUTION.CORAL_SPONGE_OBS.mapServices}, icon: false}
 							]},
-						{title: '<a target="_blank" title="EFH Catalog" href="https://www.nwfsc.noaa.gov/data/efh-catalog/">EFH Catalog</a>', folder: false, icon: false,hideCheckbox: true, unselectable:true}
+						{title: '<a target="_blank" title="EFH Catalog" href="' + api_base_uri + '/efh-catalog/">EFH Catalog</a>', folder: false, icon: false,hideCheckbox: true, unselectable:true}
 						]},
 						{title: FANCYTREE_ITEMS.HABITAT_MAP.title, key: FANCYTREE_ITEMS.HABITAT_MAP.key, folder: true, children: [
 							{title: '<a target="_blank" title="'+FANCYTREE_ITEMS.HABITAT_MAP.SGH_IND.title+'" href="'+FANCYTREE_ITEMS.HABITAT_MAP.SGH_IND.url+'" >'+FANCYTREE_ITEMS.HABITAT_MAP.SGH_IND.title+'</a>', key: FANCYTREE_ITEMS.HABITAT_MAP.SGH_IND.key, data:{url:FANCYTREE_ITEMS.HABITAT_MAP.SGH_IND.url, mapServices:FANCYTREE_ITEMS.HABITAT_MAP.SGH_IND.mapServices}, icon: false},
@@ -2696,7 +2688,7 @@ function DialogController($scope, $mdDialog) {
 
     function getTrawlSpecimensCSV(j_species_codes,j_cycleStartDate,j_cycleEndDate) {
 
-			var get_stmt = api_base_uri+'/api/v1/source/trawl.individual_fact/selection.csv?variables=date_dim$year,date_yyyymmdd,sampling_start_hhmmss,sampling_end_hhmmss,vessel,pass,leg,trawl_id,field_identified_taxonomy_dim$scientific_name,scientific_name,common_name,latitude_dd,longitude_dd,station_code,sex_dim$sex,length_cm,age_years,weight_kg,depth_m,project,target_station_design_dim$stn_invalid_for_trawl_date_whid';
+		var get_stmt = api_base_uri+'/api/v1/source/trawl.individual_fact/selection.csv?variables=date_dim$year,date_yyyymmdd,sampling_start_hhmmss,sampling_end_hhmmss,vessel,pass,leg,trawl_id,field_identified_taxonomy_dim$scientific_name,scientific_name,common_name,latitude_dd,longitude_dd,station_code,sex_dim$sex,length_cm,age_years,weight_kg,depth_m,project,target_station_design_dim$stn_invalid_for_trawl_date_whid,otosag_id,standard_survey_length_or_width_indicator,standard_survey_age_indicator,standard_survey_weight_indicator,standard_survey_maturity_indicator';
 
 			$http.get(get_stmt,{ params: {scientific_name:j_species_codes,filters:'date_yyyymmdd>='+j_cycleStartDate+',date_yyyymmdd<='+j_cycleEndDate}, responseType: 'blob'}).success(function(csv)
 			{

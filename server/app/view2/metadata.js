@@ -18,13 +18,21 @@ angular.module('myApp.metadata', ['ngRoute'])
 	}
 
 	var api_base_uri = getAbsolutePath();  
+    var env = 'PROD';
 
-	if(api_base_uri.indexOf("nwcdevfram")>=0 || api_base_uri.indexOf("localhost")>=0)
-		api_base_uri = 'https://nwcdevfram.nwfsc.noaa.gov/api/v1/source/';
-	else if(api_base_uri.indexOf("devwww11")>=0)
-		api_base_uri = 'https://devwww11.nwfsc.noaa.gov/data/api/v1/source/';
+	if(api_base_uri.indexOf("devwebapps")>=0 || api_base_uri.indexOf("localhost")>=0)
+    {
+        api_base_uri = 'https://www.devwebapps.nwfsc.noaa.gov/data/api/v1/source/';    
+        env = 'DEV';
+    }
+	else if(api_base_uri.indexOf("webapps.nwfsc.noaa.gov")>=0 )
+		api_base_uri = 'https://www.webapps.nwfsc.noaa.gov/data/api/v1/source/';
 	else
-		api_base_uri = 'https://www.nwfsc.noaa.gov/data/api/v1/source/';
+        api_base_uri = 'https://www.nwfsc.noaa.gov/data/api/v1/source/';
+            
+		console.log("api_base_uri is");
+
+		console.log(api_base_uri);
 
 /*********************************************************************************************************************************************
 	Metadata retrieval functionality
@@ -42,6 +50,10 @@ angular.module('myApp.metadata', ['ngRoute'])
 
 	$http.get(api_base_uri).success(function(json)
 	{
+        var urlJSON = "";
+        var urlCSV = "";
+        var urlXLSX = "";
+
 
         var data = json.sources;
 		var i=0;
@@ -57,11 +69,27 @@ angular.module('myApp.metadata', ['ngRoute'])
 
                 if (data[i].links.length>2)
                 {
-                    $scope.json_url = data[i].links[1].href;
-                    $scope.csv_url = data[i].links[0].href;
+                    urlCSV = data[i].links[0].href;
+                    urlJSON = json.sources[i].links[1].href;
+                    urlXLSX = json.sources[i].links[2].href;
+                    
+                    if (env=='PROD')
+                    {
+                        urlCSV = urlCSV.replace("nwfsc","webapps.nwfsc");
+                        urlJSON = urlJSON.replace("nwfsc","webapps.nwfsc");
+                        urlXLSX = urlXLSX.replace("nwfsc","webapps.nwfsc");
+                    }
+                    else
+                    {
+                        urlCSV = urlCSV.replace("devwebapps.","www.devwebapps.");
+                        urlJSON = urlJSON.replace("devwebapps.","www.devwebapps.");
+                        urlXLSX = urlXLSX.replace("devwebapps.","www.devwebapps.");
+                    }
+                    
+                    $scope.json_url = urlJSON;
+                    $scope.csv_url = urlCSV;
                     if ($scope.layer === 'GEMM Fact') {
-                        $scope.xlsx_url = data[i].links[2].href;
-                        console.log($scope.xlsx_url)
+                        $scope.xlsx_url = urlXLSX;
                     }
                 }
 

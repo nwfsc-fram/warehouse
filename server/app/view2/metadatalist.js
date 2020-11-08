@@ -15,14 +15,22 @@ angular.module('myApp.metadatalist', ['ngRoute'])
 		return loc.href.substring(0, loc.href.length - ((loc.pathname + loc.search + loc.hash).length - pathName.length));
 	}
 
-	var api_base_uri = getAbsolutePath();
+    var api_base_uri = getAbsolutePath();
+    var env = 'PROD';
 
-	if(api_base_uri.indexOf("nwcdevfram")>=0 || api_base_uri.indexOf("localhost")>=0)
-		api_base_uri = 'https://nwcdevfram.nwfsc.noaa.gov/api/v1/source/';
-	else if(api_base_uri.indexOf("devwww11")>=0)
-		api_base_uri = 'https://devwww11.nwfsc.noaa.gov/data/api/v1/source/';
+	if(api_base_uri.indexOf("devwebapps")>=0 || api_base_uri.indexOf("localhost")>=0)
+    {
+        api_base_uri = 'https://www.devwebapps.nwfsc.noaa.gov/data/api/v1/source/';    
+        env = 'DEV';
+    }
+	else if(api_base_uri.indexOf("webapps.nwfsc.noaa.gov")>=0 )
+		api_base_uri = 'https://www.webapps.nwfsc.noaa.gov/data/api/v1/source/';
 	else
-		api_base_uri = 'https://www.nwfsc.noaa.gov/data/api/v1/source/';
+        api_base_uri = 'https://www.nwfsc.noaa.gov/data/api/v1/source/';
+            
+		console.log("api_base_uri is");
+
+		console.log(api_base_uri);
 
 /*********************************************************************************************************************************************
 	Metadata list retrieval functionality
@@ -36,15 +44,35 @@ angular.module('myApp.metadatalist', ['ngRoute'])
            "url": api_base_uri,
            "dataSrc": function ( json ) {
               var metadataList=[];
-
+              var urlJSON = "";
+              var urlCSV = "";
+              var urlXLSX = "";
               for ( var i=0, ien=json.sources.length ; i<ien ; i++ )
-                  if ((json.sources[i].name.includes("fact") || json.sources[i].name.includes("view")) && !json.sources[i].project.includes("edc") ) {
-                      json.sources[i].updated = moment.tz(json.sources[i].updated, "America/Los_Angeles").format('MM/DD/YYYY HH:mm:ss');
-                      if (json.sources[i].name === "gemm_fact") {
-                          json.sources[i].download_links = '<a href=" '+ json.sources[i].links[0].href +' " target="_blank">CSV</a>, <a href="' + json.sources[i].links[1].href + '" target="_blank">JSON</a>, <a href="' + json.sources[i].links[2].href + '" target="_blank">XLSX</a>';
-                      } else {
-                        json.sources[i].download_links = '<a href=" '+ json.sources[i].links[0].href +' " target="_blank">CSV</a>, <a href="' + json.sources[i].links[1].href + '" target="_blank">JSON</a>';
-                      }
+
+                if ((json.sources[i].name.includes("fact") || json.sources[i].name.includes("view")) && !json.sources[i].project.includes("edc") ) {
+                    json.sources[i].updated = moment.tz(json.sources[i].updated, "America/Los_Angeles").format('MM/DD/YYYY HH:mm:ss');
+                    urlCSV = json.sources[i].links[0].href;
+                    urlJSON = json.sources[i].links[1].href;
+                    urlXLSX = json.sources[i].links[2].href;
+                    
+                    if (env=='PROD')
+                    {
+                        urlCSV = urlCSV.replace("nwfsc","webapps.nwfsc");
+                        urlJSON = urlJSON.replace("nwfsc","webapps.nwfsc");
+                        urlXLSX = urlXLSX.replace("nwfsc","webapps.nwfsc");
+                    }
+                    else
+                    {
+                        urlCSV = urlCSV.replace("devwebapps.","www.devwebapps.");
+                        urlJSON = urlJSON.replace("devwebapps.","www.devwebapps.");
+                        urlXLSX = urlXLSX.replace("devwebapps.","www.devwebapps.");
+                    }
+
+                    if (json.sources[i].name === "gemm_fact") {
+                        json.sources[i].download_links = '<a href=" '+urlCSV +' " target="_blank">CSV</a>, <a href="' + urlJSON + '" target="_blank">JSON</a>, <a href="' + urlXLSX + '" target="_blank">XLSX</a>';
+                    } else {
+                      json.sources[i].download_links = '<a href=" '+urlCSV +' " target="_blank">CSV</a>, <a href="' +  urlJSON + '" target="_blank">JSON</a>';
+                    }
                       metadataList.push(json.sources[i]);
                   }
               return metadataList;
