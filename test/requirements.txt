@@ -3,7 +3,7 @@ chardet==3.0.4
 et-xmlfile==1.0.1
 idna==2.5
 jdcal==1.4
-lxml==3.6.1
+lxml==4.6.2
 numpy==1.11.3
 openpyxl==2.6.0
 pandas==0.19.2
