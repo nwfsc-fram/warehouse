@@ -29,7 +29,7 @@ pyasn1==0.3.2
 git+https://github.com/dlitz/pycrypto.git@7acba5f#egg=pycrypto
 pycsw==2.0.0a1
 git+https://github.com/geopython/pygeometa.git@022edfe#egg=pygeometa
-Pygments==2.2.0
+Pygments==2.7.4
 pyicam==0.1.0rc3
 pyparsing==2.2.0
 pyproj==1.9.3
