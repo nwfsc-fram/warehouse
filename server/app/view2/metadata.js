@@ -47,6 +47,7 @@ angular.module('myApp.metadata', ['ngRoute'])
     $scope.lastUpdated;
 
     $scope.showLayer = false;
+    $scope.showGEMM = false;
 
 	$http.get(api_base_uri).success(function(json)
 	{
@@ -69,21 +70,15 @@ angular.module('myApp.metadata', ['ngRoute'])
 
                 if (data[i].links.length>2)
                 {
-                    urlCSV = data[i].links[0].href;
-                    urlJSON = json.sources[i].links[1].href;
-                    urlXLSX = json.sources[i].links[2].href;
+                    urlCSV = data[i].links[0].href;//.replace("https://","https://www.");
+                    urlJSON = json.sources[i].links[1].href;//.replace("https://","https://www.");
+                    urlXLSX = json.sources[i].links[2].href;//.replace("https://","https://www.");
                     
-                    if (env=='PROD')
+                    if (env='PROD')
                     {
                         urlCSV = urlCSV.replace("nwfsc","webapps.nwfsc");
                         urlJSON = urlJSON.replace("nwfsc","webapps.nwfsc");
                         urlXLSX = urlXLSX.replace("nwfsc","webapps.nwfsc");
-                    }
-                    else
-                    {
-                        urlCSV = urlCSV.replace("devwebapps.","www.devwebapps.");
-                        urlJSON = urlJSON.replace("devwebapps.","www.devwebapps.");
-                        urlXLSX = urlXLSX.replace("devwebapps.","www.devwebapps.");
                     }
                     
                     $scope.json_url = urlJSON;
@@ -97,7 +92,11 @@ angular.module('myApp.metadata', ['ngRoute'])
                 $scope.lastUpdated = (lastDateUpdated.getMonth() + 1) +'/'+ lastDateUpdated.getDate() +'/'+ lastDateUpdated.getFullYear()
                         +' '+lastDateUpdated.getHours()+':'+lastDateUpdated.getMinutes() +':'+lastDateUpdated.getSeconds();
 
-                $scope.showLayer = true;
+                if ($scope.layer != 'GEMM Fact')
+                    $scope.showLayer = true; 
+                else
+                    $scope.showGEMM = true;
+                
              }
         }
 
