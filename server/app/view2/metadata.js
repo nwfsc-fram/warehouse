@@ -47,7 +47,6 @@ angular.module('myApp.metadata', ['ngRoute'])
     $scope.lastUpdated;
 
     $scope.showLayer = false;
-    $scope.showGEMM = false;
 
 	$http.get(api_base_uri).success(function(json)
 	{
@@ -92,10 +91,7 @@ angular.module('myApp.metadata', ['ngRoute'])
                 $scope.lastUpdated = (lastDateUpdated.getMonth() + 1) +'/'+ lastDateUpdated.getDate() +'/'+ lastDateUpdated.getFullYear()
                         +' '+lastDateUpdated.getHours()+':'+lastDateUpdated.getMinutes() +':'+lastDateUpdated.getSeconds();
 
-                if ($scope.layer != 'GEMM Fact')
-                    $scope.showLayer = true; 
-                else
-                    $scope.showGEMM = true;
+                $scope.showLayer = true; 
                 
              }
         }
