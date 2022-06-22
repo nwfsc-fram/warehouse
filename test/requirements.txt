@@ -4,7 +4,7 @@ et-xmlfile==1.0.1
 idna==2.5
 jdcal==1.4
 lxml==4.6.3
-numpy==1.11.3
+numpy==1.22.0
 openpyxl==2.6.0
 pandas==0.19.2
 pyparsing==2.2.0
